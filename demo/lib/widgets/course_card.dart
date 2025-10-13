@@ -19,66 +19,75 @@ class CourseCard extends StatefulWidget {
   State<CourseCard> createState() => _CourseCardState();
 }
 
-class _CourseCardState extends State<CourseCard> {
-  bool _isTapped = false;
+class _CourseCardState extends State<CourseCard>
+    with SingleTickerProviderStateMixin {
   bool _isHovered = false;
+  bool _isButtonHovered = false;
+  late AnimationController _hoverController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _hoverController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+      lowerBound: 0.0,
+      upperBound: 1.0,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.025)
+        .animate(CurvedAnimation(parent: _hoverController, curve: Curves.easeOut));
+  }
+
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isTapped = true),
-        onTapUp: (_) {
-          setState(() => _isTapped = false);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => CourseDetailPage(courseTitle: widget.title),
-            ),
-          );
-        },
+      onEnter: (_) {
+        setState(() => _isHovered = true);
+        _hoverController.forward();
+      },
+      onExit: (_) {
+        setState(() => _isHovered = false);
+        _hoverController.reverse();
+      },
+      child: ScaleTransition(
+        scale: _scaleAnimation,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-          transform: Matrix4.identity()
-            ..scale(_isHovered ? 1.05 : 1.0) // efek membesar saat hover
-            ..translate(0, _isTapped ? 3.0 : 0.0), // sedikit turun saat diklik
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
           decoration: BoxDecoration(
-            color: _isTapped
-                ? colorScheme.primaryContainer.withOpacity(0.6)
-                : _isHovered
-                    ? colorScheme.primaryContainer.withOpacity(0.9)
-                    : colorScheme.primaryContainer.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                      color: colorScheme.primary.withOpacity(0.4),
-                      blurRadius: 12,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 4),
-                    )
-                  ]
-                : [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    )
-                  ],
+            color: _isHovered
+                ? colorScheme.primaryContainer.withValues(alpha: 0.9)
+                : colorScheme.primaryContainer.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: _isHovered
+                    ? colorScheme.primary.withValues(alpha: 0.25)
+                    : Colors.transparent,
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Hero(
                 tag: widget.title,
-                child: Image.asset(widget.image, height: 60),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(widget.image, height: 65, fit: BoxFit.cover),
+                ),
               ),
               const SizedBox(height: 10),
               Text(
@@ -86,17 +95,60 @@ class _CourseCardState extends State<CourseCard> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: colorScheme.onPrimaryContainer,
+                  fontSize: 16,
                 ),
               ),
               Text(
                 "${widget.hours} Hours",
-                style: TextStyle(color: colorScheme.onPrimaryContainer.withOpacity(0.8)),
+                style: TextStyle(
+                  fontSize: 13,
+                  color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                ),
               ),
               Text(
                 "\$${widget.price}",
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 10),
+              MouseRegion(
+                onEnter: (_) => setState(() => _isButtonHovered = true),
+                onExit: (_) => setState(() => _isButtonHovered = false),
+                child: AnimatedScale(
+                  scale: _isButtonHovered ? 1.03 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                CourseDetailPage(courseTitle: widget.title),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _isButtonHovered
+                            ? colorScheme.primary.withValues(alpha: 0.9)
+                            : colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: _isButtonHovered ? 6 : 2,
+                      ),
+                      child: const Text(
+                        "View Course",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

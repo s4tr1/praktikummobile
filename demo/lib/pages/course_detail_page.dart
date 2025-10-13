@@ -45,6 +45,21 @@ class _CourseDetailPageState extends State<CourseDetailPage>
               "Welcome to your course!",
               style: TextStyle(fontSize: 22),
             ),
+            Hero(
+              tag: "${widget.courseTitle}_button",
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text("Start Course"),
+              ),
+            ),
           ],
         ),
       ),

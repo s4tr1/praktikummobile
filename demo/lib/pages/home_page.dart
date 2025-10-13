@@ -22,16 +22,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
-    _fadeController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    )..forward();
-
-    _slideController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    )..forward();
+    _fadeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800))..forward();
+    _slideController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600))..forward();
   }
 
   @override
@@ -65,8 +57,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               position: Tween<Offset>(
                 begin: const Offset(0, -0.2),
                 end: Offset.zero,
-              ).animate(CurvedAnimation(
-                  parent: _slideController, curve: Curves.easeOut)),
+              ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOut)),
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -86,9 +77,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ),
                         IconButton(
                           icon: Icon(
-                            widget.isDarkMode
-                                ? Icons.dark_mode_rounded
-                                : Icons.light_mode_rounded,
+                            widget.isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
                             color: colorScheme.primary,
                             size: 28,
                           ),
@@ -99,28 +88,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 16),
 
-                    // Animated Banner
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 600),
-                      child: _buildBanner(
-                        color: widget.isDarkMode
-                            ? Colors.blueGrey.shade700
-                            : Colors.indigo.shade300,
-                        title: "How do you want to start?",
-                        buttonText: "Take a Test",
-                      ),
+                    // Banner
+                    _buildBanner(
+                      color: widget.isDarkMode ? Colors.blueGrey.shade700 : Colors.indigo.shade300,
+                      title: "How do you want to start?",
+                      buttonText: "Take a Test",
                     ),
                     const SizedBox(height: 16),
                     _buildBanner(
-                      color: widget.isDarkMode
-                          ? Colors.teal.shade600
-                          : Colors.indigo.shade400,
+                      color: widget.isDarkMode ? Colors.teal.shade600 : Colors.indigo.shade400,
                       title: "Free online course",
                       buttonText: "Start learning",
                     ),
 
                     const SizedBox(height: 28),
 
+                    // Grid Course Cards
                     Text(
                       "Skills-Based Courses",
                       style: TextStyle(
@@ -131,15 +114,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 16),
 
-                    // Responsif Grid
                     LayoutBuilder(
                       builder: (context, constraints) {
                         int crossAxisCount = 2;
+                        double aspectRatio = 0.78; // ✅ lebih tinggi biar muat tombol
+
                         if (constraints.maxWidth > 600) {
                           crossAxisCount = 3;
+                          aspectRatio = 0.9;
                         }
                         if (constraints.maxWidth > 900) {
                           crossAxisCount = 4;
+                          aspectRatio = 1.0;
                         }
 
                         return GridView.count(
@@ -148,51 +134,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           physics: const NeverScrollableScrollPhysics(),
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
+                          childAspectRatio: aspectRatio, // ✅ cegah overflow
                           children: const [
-                            CourseCard(
-                                title: "Writing",
-                                price: 200,
-                                hours: 100,
-                                image: "assets/writing.jpg"),
-                            CourseCard(
-                                title: "Reading",
-                                price: 450,
-                                hours: 120,
-                                image: "assets/reading.jpeg"),
-                            CourseCard(
-                                title: "Listening",
-                                price: 300,
-                                hours: 360,
-                                image: "assets/listening.jpg"),
-                            CourseCard(
-                                title: "Speaking",
-                                price: 280,
-                                hours: 80,
-                                image: "assets/speaking.jpg"),
+                            CourseCard(title: "Writing", price: 200, hours: 100, image: "assets/writing.jpg"),
+                            CourseCard(title: "Reading", price: 450, hours: 120, image: "assets/reading.jpeg"),
+                            CourseCard(title: "Listening", price: 300, hours: 360, image: "assets/listening.jpg"),
+                            CourseCard(title: "Speaking", price: 280, hours: 80, image: "assets/speaking.jpg"),
                           ],
                         );
                       },
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 30),
 
-                    // Promo Card with subtle animation
+                    // Promo Card
                     ScaleTransition(
-                      scale: CurvedAnimation(
-                          parent: _fadeController, curve: Curves.elasticOut),
+                      scale: CurvedAnimation(parent: _fadeController, curve: Curves.elasticOut),
                       child: Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.pinkAccent.shade200,
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.pink.shade100.withOpacity(0.4),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            )
-                          ],
                         ),
                         child: const Text(
                           "Special Discounts\n20% OFF",
