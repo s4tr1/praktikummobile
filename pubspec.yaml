@@ -1,0 +1,36 @@
+name: demo
+description: "Conatus Academy - English Learning App (Modul 2 Demo)"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # (Opsional) Untuk menampilkan animasi berbasis file JSON jika nanti mau nambah Lottie
+  lottie: ^3.1.2
+
+  # (Opsional) Untuk menampilkan gambar SVG seperti ilustrasi Duolingo-style
+  flutter_svg: ^2.0.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  # 🖼️ Aset gambar kamu (buat folder assets/ di root project)
+  assets:
+    - assets/avatar.png
+    - assets/logo.jpg
+    - assets/writing.jpg
+    - assets/reading.jpeg
+    - assets/listening.jpg
+    - assets/speaking.jpg
