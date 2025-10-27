@@ -36,9 +36,10 @@ class _SplashViewState extends State<SplashView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/conatus_logo.png', width: size.width * 0.6),
+            Image.asset('assets/images/conatus.jpg', width: size.width * 0.6),
             const SizedBox(height: 24),
-            const Text('English, Elevated', style: TextStyle(color: Colors.white70, fontSize: 18)),
+            const Text('English, Elevated',
+                style: TextStyle(color: Colors.white70, fontSize: 18)),
           ],
         ),
       ),

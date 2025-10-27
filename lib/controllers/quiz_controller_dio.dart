@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/quiz_model.dart';
 import '../services/quiz_service.dart';
-import '../services/translation_service.dart';
+import '../services/translation_service_dio.dart';
 import 'course_controller.dart';
 
-class QuizController extends GetxController {
+class QuizControllerDio extends GetxController {
   final QuizService _service = QuizService();
-  final TranslationService _translationService = TranslationService();
+  final TranslationServiceDio _translationService = TranslationServiceDio();
 
   var quizzes = <QuizModel>[].obs;
   var currentIndex = 0.obs;
@@ -24,6 +24,12 @@ class QuizController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _translationService.cancelRequests();
+    super.onClose();
   }
 
   Future<void> loadQuizzes({String courseKey = 'basic_grammar'}) async {
@@ -77,7 +83,7 @@ class QuizController extends GetxController {
     }
   }
 
-  /// Terjemahkan semua pilihan jawaban
+  /// Terjemahkan semua pilihan jawaban (Sequential)
   Future<void> translateCurrentOptions() async {
     if (quizzes.isEmpty) return;
 
@@ -105,13 +111,41 @@ class QuizController extends GetxController {
     }
   }
 
-  /// Translate both question dan options sekaligus
+  /// Terjemahkan semua pilihan jawaban (Parallel - Lebih Cepat!)
+  Future<void> translateCurrentOptionsParallel() async {
+    if (quizzes.isEmpty) return;
+
+    final q = quizzes[currentIndex.value];
+    final targetLanguage = currentLanguage.value == 'en' ? 'id' : 'en';
+
+    translatingOptions.value = true;
+    try {
+      final translated = await _translationService.translateMultipleParallel(
+        texts: q.options,
+        targetLanguage: targetLanguage,
+      );
+      translatedOptions.assignAll(translated);
+    } catch (e) {
+      Get.snackbar(
+        'Translation Error',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    } finally {
+      translatingOptions.value = false;
+    }
+  }
+
+  /// Translate both question dan options sekaligus (Parallel)
   Future<void> translateAll() async {
     if (quizzes.isEmpty) return;
 
     await Future.wait([
       translateCurrentQuestion(),
-      translateCurrentOptions(),
+      translateCurrentOptionsParallel(),
     ]);
   }
 

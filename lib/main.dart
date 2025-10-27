@@ -3,15 +3,22 @@ import 'package:get/get.dart';
 import 'routes/app_routes.dart';
 import 'controllers/course_controller.dart';
 import 'controllers/quiz_controller.dart';
+import 'controllers/quiz_controller_dio.dart';
 import 'data/db_helper.dart';
 import 'views/splash_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DBHelper.instance.initDB(); // initialize sqlite
-  // initialize controllers so data can be ready
+
+  // Initialize controllers
   Get.put(CourseController());
-  Get.put(QuizController());
+
+  // Both quiz controllers are registered but lazy loaded
+  // They will be initialized when needed
+  Get.lazyPut<QuizController>(() => QuizController());
+  Get.lazyPut<QuizControllerDio>(() => QuizControllerDio());
+
   runApp(const ConatusApp());
 }
 
@@ -28,6 +35,7 @@ class ConatusApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         scaffoldBackgroundColor: Colors.white,
+        useMaterial3: true,
       ),
       home: const SplashView(),
     );
