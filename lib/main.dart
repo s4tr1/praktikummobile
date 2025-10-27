@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'routes/app_routes.dart';
 import 'controllers/course_controller.dart';
+import 'controllers/auth_controller.dart';
 import 'controllers/quiz_controller.dart';
 import 'controllers/quiz_controller_dio.dart';
 import 'data/db_helper.dart';
@@ -13,6 +14,7 @@ void main() async {
 
   // Initialize controllers
   Get.put(CourseController());
+  Get.put(AuthController(), permanent: true); // Add AuthController here
 
   // Both quiz controllers are registered but lazy loaded
   // They will be initialized when needed

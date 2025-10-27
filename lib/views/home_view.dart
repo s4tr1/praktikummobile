@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/course_controller.dart';
+import '../controllers/auth_controller.dart';
 import '../routes/app_routes.dart';
 
 class HomeView extends StatelessWidget {
@@ -9,17 +10,98 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final courseCtrl = Get.find<CourseController>();
+    // Use lazyPut to avoid initialization issues
+    final authCtrl = Get.put(AuthController(), permanent: true);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text('Hi, Sarah', style: TextStyle(color: Colors.white)),
+        title: Obx(() => Text(
+              'Hi, ${authCtrl.getCurrentUserName()}',
+              style: const TextStyle(color: Colors.white),
+            )),
         actions: [
+          // Logout Button
+          PopupMenuButton(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'profile',
+                child: Row(
+                  children: [
+                    Icon(Icons.person_outline, size: 20),
+                    SizedBox(width: 12),
+                    Text('Profile'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'settings',
+                child: Row(
+                  children: [
+                    Icon(Icons.settings_outlined, size: 20),
+                    SizedBox(width: 12),
+                    Text('Settings'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, size: 20, color: Colors.red),
+                    SizedBox(width: 12),
+                    Text('Logout', style: TextStyle(color: Colors.red)),
+                  ],
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              if (value == 'logout') {
+                Get.dialog(
+                  AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.back(),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                          authCtrl.logout();
+                        },
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (value == 'profile') {
+                Get.snackbar(
+                  'Profile',
+                  'Profile feature coming soon!',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              } else if (value == 'settings') {
+                Get.snackbar(
+                  'Settings',
+                  'Settings feature coming soon!',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
+            },
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/conatus.jpg')),
-          )
+              backgroundImage: AssetImage('assets/images/conatus.jpg'),
+            ),
+          ),
         ],
       ),
       extendBodyBehindAppBar: true,
