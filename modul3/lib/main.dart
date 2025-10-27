@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
-import 'views/auth/splash_screen.dart';
+import 'package:get/get.dart';
+import 'controllers/auth_controller.dart';
+import 'controllers/course_controller.dart';
+import 'controllers/progress_controller.dart';
+import 'routes/app_routes.dart';
 import 'utils/app_colors.dart';
-import 'utils/constants.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const ConatusApp());
+  // Pastikan binding GetX siap
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inject semua controller global
+  Get.put(AuthController(), permanent: true);
+  Get.put(CourseController(), permanent: true);
+  Get.put(ProgressController(), permanent: true);
+
+  runApp(const MyApp());
 }
 
-class ConatusApp extends StatelessWidget {
-  const ConatusApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppConstants.appName,
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Learning App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-        textTheme: GoogleFonts.poppinsTextTheme(),
-        scaffoldBackgroundColor: AppColors.background,
+        useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      initialRoute: AppRoutes.dashboard, // mulai dari dashboard
+      getPages: AppRoutes.routes, // daftar route
     );
   }
 }
