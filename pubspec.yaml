@@ -1,0 +1,30 @@
+name: conatus_academy
+description: Conatus Academy - Starter app with SQLite and elegant UI
+publish_to: "none"
+version: 0.0.1
+
+environment:
+  sdk: ">=2.18.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.5
+  get: ^4.6.6
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  http: ^0.13.6
+  flutter_svg: ^1.1.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/quizzes.json
+
+
