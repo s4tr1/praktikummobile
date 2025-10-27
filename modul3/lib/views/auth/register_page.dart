@@ -33,9 +33,9 @@ class RegisterPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                CustomTextField(controller: usernameC, hintText: "Username"),
+                CustomTextField(controller: usernameC, hint: "Username"),
                 const SizedBox(height: 16),
-                CustomTextField(controller: passwordC, hintText: "Password", obscureText: true),
+                CustomTextField(controller: passwordC,  hint: "Password", obscure: true),
                 const SizedBox(height: 16),
                 DropdownButton<String>(
                   value: selectedRole,

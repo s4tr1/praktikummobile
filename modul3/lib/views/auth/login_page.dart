@@ -34,9 +34,9 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              CustomTextField(controller: usernameC, hintText: "Username"),
+              CustomTextField(controller: usernameC, hint: "Username"),
               const SizedBox(height: 16),
-              CustomTextField(controller: passwordC, hintText: "Password", obscureText: true),
+              CustomTextField(controller: passwordC, hint: "Password", obscure: true),
               const SizedBox(height: 24),
               CustomButton(
                 text: "Login",
@@ -46,7 +46,7 @@ class LoginPage extends StatelessWidget {
                     if (authController.currentUser.value!.role == "admin") {
                       Get.off(() => const AdminDashboard());
                     } else {
-                      Get.off(() => const UserDashboard());
+                      Get.off(() => UserDashboard());
                     }
                   } else {
                     Get.snackbar("Error", "Invalid username or password");

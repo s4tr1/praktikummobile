@@ -5,6 +5,8 @@ import '../../utils/app_colors.dart';
 
 class UserDashboard extends StatelessWidget {
   final ProgressController controller = Get.put(ProgressController());
+  UserDashboard({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class UserDashboard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 20),
@@ -63,7 +65,7 @@ class UserDashboard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
+                color: AppColors.secondary,
               ),
             ),
             const SizedBox(height: 12),
@@ -125,7 +127,7 @@ class UserDashboard extends StatelessWidget {
         width: 100,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppColors.background,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
@@ -142,7 +144,7 @@ class UserDashboard extends StatelessWidget {
             Text(label,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: AppColors.primary,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 )),

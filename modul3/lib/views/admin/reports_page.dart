@@ -20,7 +20,7 @@ class _ReportsPageState extends State<ReportsPage> {
   }
 
   Future<void> loadReports() async {
-    final data = await dao.getAllProgress();
+    final data = await dao.getAllProgressRaw();
     setState(() => reports = data);
   }
 
