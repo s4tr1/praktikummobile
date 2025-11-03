@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/auth_controller.dart';
+import '../controllers/admin_controller.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+class AdminLoginView extends StatelessWidget {
+  const AdminLoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authCtrl = Get.put(AuthController());
+    final adminCtrl = Get.put(AdminController());
 
     return Scaffold(
       body: Container(
@@ -15,7 +15,7 @@ class LoginView extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0E1B50), Color(0xFF087E8B)],
+            colors: [Color(0xFF1A237E), Color(0xFF283593)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -28,7 +28,7 @@ class LoginView extends StatelessWidget {
               children: [
                 const SizedBox(height: 40),
 
-                // Logo
+                // Admin Icon
                 Center(
                   child: Container(
                     width: 120,
@@ -44,11 +44,10 @@ class LoginView extends StatelessWidget {
                         )
                       ],
                     ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/conatus.jpg',
-                        fit: BoxFit.cover,
-                      ),
+                    child: const Icon(
+                      Icons.admin_panel_settings,
+                      size: 60,
+                      color: Color(0xFF1A237E),
                     ),
                   ),
                 ),
@@ -56,17 +55,17 @@ class LoginView extends StatelessWidget {
 
                 // Welcome Text
                 const Text(
-                  'Welcome Back!',
+                  'Admin Portal',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Login to continue learning',
+                  'Manage quizzes and monitor users',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white70,
@@ -94,11 +93,11 @@ class LoginView extends StatelessWidget {
                     children: [
                       // Email Field
                       TextField(
-                        controller: authCtrl.emailController,
+                        controller: adminCtrl.emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          labelText: 'Email',
-                          hintText: 'Enter your email',
+                          labelText: 'Admin Email',
+                          hintText: 'Enter admin email',
                           prefixIcon: const Icon(Icons.email_outlined),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -111,19 +110,19 @@ class LoginView extends StatelessWidget {
 
                       // Password Field
                       Obx(() => TextField(
-                        controller: authCtrl.passwordController,
-                        obscureText: authCtrl.isPasswordHidden.value,
+                        controller: adminCtrl.passwordController,
+                        obscureText: adminCtrl.isPasswordHidden.value,
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          hintText: 'Enter your password',
+                          hintText: 'Enter password',
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              authCtrl.isPasswordHidden.value
+                              adminCtrl.isPasswordHidden.value
                                   ? Icons.visibility_off
                                   : Icons.visibility,
                             ),
-                            onPressed: authCtrl.togglePasswordVisibility,
+                            onPressed: adminCtrl.togglePasswordVisibility,
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -132,45 +131,11 @@ class LoginView extends StatelessWidget {
                           fillColor: Colors.grey[50],
                         ),
                       )),
-                      const SizedBox(height: 12),
-
-                      // Remember Me & Forgot Password
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(() => Row(
-                            children: [
-                              Checkbox(
-                                value: authCtrl.rememberMe.value,
-                                onChanged: (val) =>
-                                    authCtrl.toggleRememberMe(),
-                                activeColor: const Color(0xFF087E8B),
-                              ),
-                              const Text('Remember me'),
-                            ],
-                          )),
-                          TextButton(
-                            onPressed: () {
-                              Get.snackbar(
-                                'Info',
-                                'Feature coming soon!',
-                                snackPosition: SnackPosition.BOTTOM,
-                              );
-                            },
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: Colors.indigo[600],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(height: 24),
 
                       // Error Message
                       Obx(() {
-                        if (authCtrl.errorMessage.value.isNotEmpty) {
+                        if (adminCtrl.errorMessage.value.isNotEmpty) {
                           return Container(
                             padding: const EdgeInsets.all(12),
                             margin: const EdgeInsets.only(bottom: 16),
@@ -186,7 +151,7 @@ class LoginView extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    authCtrl.errorMessage.value,
+                                    adminCtrl.errorMessage.value,
                                     style: TextStyle(color: Colors.red[600]),
                                   ),
                                 ),
@@ -199,18 +164,18 @@ class LoginView extends StatelessWidget {
 
                       // Login Button
                       Obx(() => ElevatedButton(
-                        onPressed: authCtrl.isLoading.value
+                        onPressed: adminCtrl.isLoading.value
                             ? null
-                            : authCtrl.login,
+                            : adminCtrl.login,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: const Color(0xFF087E8B),
+                          backgroundColor: const Color(0xFF1A237E),
                           disabledBackgroundColor: Colors.grey[300],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: authCtrl.isLoading.value
+                        child: adminCtrl.isLoading.value
                             ? const SizedBox(
                           height: 20,
                           width: 20,
@@ -221,7 +186,7 @@ class LoginView extends StatelessWidget {
                           ),
                         )
                             : const Text(
-                          'Login',
+                          'Login as Admin',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -231,42 +196,13 @@ class LoginView extends StatelessWidget {
                       )),
                       const SizedBox(height: 16),
 
-                      // Register Link
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Don't have an account?"),
-                          TextButton(
-                            onPressed: () {
-                              Get.toNamed('/register');
-                            },
-                            child: Text(
-                              'Register',
-                              style: TextStyle(
-                                color: Colors.indigo[600],
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Admin Access Button
-                      const Divider(height: 32),
-                      Center(
-                        child: TextButton.icon(
-                          onPressed: () => Get.toNamed('/admin/login'),
-                          icon: const Icon(
-                            Icons.admin_panel_settings,
-                            size: 20,
-                          ),
-                          label: const Text('Admin Login'),
-                          style: TextButton.styleFrom(
-                            foregroundColor: const Color(0xFF1A237E),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
-                            ),
+                      // Back to User Login
+                      TextButton(
+                        onPressed: () => Get.offNamed('/login'),
+                        child: const Text(
+                          'Back to User Login',
+                          style: TextStyle(
+                            color: Color(0xFF1A237E),
                           ),
                         ),
                       ),
@@ -286,7 +222,7 @@ class LoginView extends StatelessWidget {
                   child: Column(
                     children: const [
                       Text(
-                        'Demo Credentials',
+                        'Demo Admin Credentials',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -295,7 +231,7 @@ class LoginView extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Email: sarah@conatus.com\nPassword: sarah123',
+                        'Email: admin@conatus.com\nPassword: admin123',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white70,
