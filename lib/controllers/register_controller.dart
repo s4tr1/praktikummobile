@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../data/db_helper.dart';
+import '../services/supabase_auth_service.dart';
+import '../services/hive_service.dart';
 import '../routes/app_routes.dart';
 
 class RegisterController extends GetxController {
@@ -14,7 +15,8 @@ class RegisterController extends GetxController {
   var isConfirmPasswordHidden = true.obs;
   var errorMessage = ''.obs;
 
-  final db = DBHelper.instance;
+  final _authService = SupabaseAuthService();
+  final _hiveService = HiveService();
 
   @override
   void onClose() {
@@ -25,7 +27,7 @@ class RegisterController extends GetxController {
     super.onClose();
   }
 
-  /// Register new user
+  /// Register new user with Supabase
   Future<void> register() async {
     final name = nameController.text.trim();
     final email = emailController.text.trim();
@@ -60,45 +62,36 @@ class RegisterController extends GetxController {
     errorMessage.value = '';
 
     try {
-      final database = await db.database;
-
-      // Check if email already exists
-      final existingUser = await database.query(
-        'users',
-        where: 'email = ?',
-        whereArgs: [email],
+      // Register with Supabase
+      final user = await _authService.registerUser(
+        email: email,
+        password: password,
+        name: name,
       );
 
-      if (existingUser.isNotEmpty) {
-        errorMessage.value = 'Email already registered';
+      if (user == null) {
+        errorMessage.value = 'Registration failed. Please try again.';
         isLoading.value = false;
         return;
       }
 
-      // Insert new user
-      await database.insert('users', {
-        'name': name,
-        'email': email,
-        'password': password, // In production, hash this!
-      });
-
-      await Future.delayed(
-          const Duration(milliseconds: 800)); // Simulate network delay
+      // Save to local cache
+      await _hiveService.saveUser(user);
 
       // Success
       Get.snackbar(
         'Success',
-        'Account created successfully! Please login.',
+        'Account created successfully! Please check your email to verify your account.',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 3),
       );
 
       // Navigate back to login
       Get.back();
     } catch (e) {
-      errorMessage.value = 'Registration failed: ${e.toString()}';
+      errorMessage.value = e.toString().replaceAll('Exception: ', '');
     } finally {
       isLoading.value = false;
     }

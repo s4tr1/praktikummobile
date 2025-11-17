@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../data/db_helper.dart';
+import '../services/supabase_auth_service.dart';
+import '../services/hive_service.dart';
+import '../models/user_model.dart';
 import '../routes/app_routes.dart';
 
 class AuthController extends GetxController {
@@ -13,15 +15,15 @@ class AuthController extends GetxController {
   var rememberMe = false.obs;
   var errorMessage = ''.obs;
   var isLoggedIn = false.obs;
-  var currentUser = Rxn<Map<String, dynamic>>();
+  var currentUser = Rxn<UserModel>();
 
-  final db = DBHelper.instance;
+  final _authService = SupabaseAuthService();
+  final _hiveService = HiveService();
 
   @override
   void onInit() {
     super.onInit();
     _checkLoginStatus();
-    _initializeDemoUser();
   }
 
   @override
@@ -33,47 +35,44 @@ class AuthController extends GetxController {
 
   /// Check if user is already logged in
   Future<void> _checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
-    final savedEmail = prefs.getString('user_email');
-    final savedPassword = prefs.getString('user_password');
-
-    // Only auto-fill if user was logged in with "Remember Me"
-    if (isLoggedIn && savedEmail != null && savedPassword != null) {
-      emailController.text = savedEmail;
-      passwordController.text = savedPassword;
-      rememberMe.value = true;
-      // Don't auto-login here, let splash handle it
-    }
-  }
-
-  /// Initialize demo user in database
-  Future<void> _initializeDemoUser() async {
     try {
-      final database = await db.database;
+      // Check Supabase session
+      if (_authService.isUserLoggedIn()) {
+        final authUser = _authService.getCurrentAuthUser();
+        if (authUser != null) {
+          // Get user profile from cache or database
+          var user = _hiveService.getCachedUser();
 
-      // Check if demo user exists
-      final result = await database.query(
-        'users',
-        where: 'email = ?',
-        whereArgs: ['sarah@conatus.com'],
-      );
+          if (user == null) {
+            // Fetch from Supabase
+            user = await _authService.getUserProfile(authUser.id);
+            if (user != null) {
+              await _hiveService.saveUser(user);
+            }
+          }
 
-      // If not exists, create demo user
-      if (result.isEmpty) {
-        await database.insert('users', {
-          'name': 'Sarah',
-          'email': 'sarah@conatus.com',
-          // In production, you'd hash this password!
-          'password': 'sarah123',
-        });
+          if (user != null) {
+            currentUser.value = user;
+            isLoggedIn.value = true;
+          }
+        }
+      }
+
+      // Check SharedPreferences for remember me
+      final prefs = await SharedPreferences.getInstance();
+      final savedEmail = prefs.getString('user_email');
+      final savedRememberMe = prefs.getBool('remember_me') ?? false;
+
+      if (savedEmail != null && savedRememberMe) {
+        emailController.text = savedEmail;
+        rememberMe.value = true;
       }
     } catch (e) {
-      print('Error initializing demo user: $e');
+      print('Error checking login status: $e');
     }
   }
 
-  /// Login function
+  /// Login function with Supabase
   Future<void> login({bool autoLogin = false}) async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -93,41 +92,37 @@ class AuthController extends GetxController {
     errorMessage.value = '';
 
     try {
-      final database = await db.database;
-
-      // Query user from database
-      final result = await database.query(
-        'users',
-        where: 'email = ? AND password = ?',
-        whereArgs: [email, password],
+      // Login with Supabase
+      final user = await _authService.loginUser(
+        email: email,
+        password: password,
       );
 
-      await Future.delayed(
-          const Duration(milliseconds: 800)); // Simulate network delay
-
-      if (result.isEmpty) {
+      if (user == null) {
         errorMessage.value = 'Invalid email or password';
         isLoading.value = false;
         return;
       }
 
-      // Login successful
-      final user = result.first;
+      // Save to local cache
+      await _hiveService.saveUser(user);
       currentUser.value = user;
       isLoggedIn.value = true;
 
       // Save login credentials if remember me is checked
+      final prefs = await SharedPreferences.getInstance();
       if (rememberMe.value) {
-        final prefs = await SharedPreferences.getInstance();
         await prefs.setString('user_email', email);
-        await prefs.setString('user_password', password);
-        await prefs.setBool('is_logged_in', true);
+        await prefs.setBool('remember_me', true);
+      } else {
+        await prefs.remove('user_email');
+        await prefs.setBool('remember_me', false);
       }
 
       if (!autoLogin) {
         Get.snackbar(
           'Success',
-          'Welcome back, ${user['name']}!',
+          'Welcome back, ${user.name}!',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,
@@ -138,7 +133,7 @@ class AuthController extends GetxController {
       // Navigate to home
       Get.offAllNamed(AppRoutes.home);
     } catch (e) {
-      errorMessage.value = 'Login failed: ${e.toString()}';
+      errorMessage.value = e.toString().replaceAll('Exception: ', '');
     } finally {
       isLoading.value = false;
     }
@@ -147,12 +142,21 @@ class AuthController extends GetxController {
   /// Logout function
   Future<void> logout() async {
     try {
+      // Logout from Supabase
+      await _authService.logoutUser();
+
+      // Clear local cache
+      await _hiveService.clearUser();
+
+      // Clear SharedPreferences (keep remember me email if checked)
       final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
+      if (!rememberMe.value) {
+        await prefs.remove('user_email');
+      }
+      await prefs.remove('is_logged_in');
 
       currentUser.value = null;
       isLoggedIn.value = false;
-      emailController.clear();
       passwordController.clear();
 
       Get.offAllNamed(AppRoutes.login);
@@ -166,6 +170,13 @@ class AuthController extends GetxController {
       );
     } catch (e) {
       print('Logout error: $e');
+      Get.snackbar(
+        'Error',
+        'Logout failed: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -179,6 +190,75 @@ class AuthController extends GetxController {
 
   /// Get current user name
   String getCurrentUserName() {
-    return currentUser.value?['name'] ?? 'User';
+    return currentUser.value?.name ?? 'User';
+  }
+
+  /// Get current user ID
+  String? getCurrentUserId() {
+    return currentUser.value?.id;
+  }
+
+  /// Update user profile
+  Future<void> updateProfile({
+    String? name,
+    String? avatarUrl,
+  }) async {
+    final userId = getCurrentUserId();
+    if (userId == null) return;
+
+    try {
+      await _authService.updateUserProfile(
+        userId: userId,
+        name: name,
+        avatarUrl: avatarUrl,
+      );
+
+      // Update local cache
+      if (currentUser.value != null) {
+        if (name != null) currentUser.value!.name = name;
+        if (avatarUrl != null) currentUser.value!.avatarUrl = avatarUrl;
+        await _hiveService.saveUser(currentUser.value!);
+        currentUser.refresh();
+      }
+
+      Get.snackbar(
+        'Success',
+        'Profile updated successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to update profile: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  /// Request password reset
+  Future<void> requestPasswordReset(String email) async {
+    try {
+      await _authService.resetPassword(email);
+      Get.snackbar(
+        'Success',
+        'Password reset email sent! Check your inbox.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString().replaceAll('Exception: ', ''),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 }

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/admin_service.dart';
+import '../services/supabase_auth_service.dart';
+import '../services/supabase_data_service.dart';
+import '../services/hive_service.dart';
 import '../models/quiz_model.dart';
 
 class AdminController extends GetxController {
-  final AdminService _adminService = AdminService();
+  final SupabaseAuthService _authService = SupabaseAuthService();
+  final SupabaseDataService _dataService = SupabaseDataService();
+  final HiveService _hiveService = HiveService();
 
   // Login fields
   final emailController = TextEditingController();
@@ -71,9 +75,10 @@ class AdminController extends GetxController {
     errorMessage.value = '';
 
     try {
-      final admin = await _adminService.loginAdmin(
-        emailController.text.trim(),
-        passwordController.text,
+      // Login with Supabase
+      final admin = await _authService.loginAdmin(
+        email: emailController.text.trim(),
+        password: passwordController.text,
       );
 
       if (admin != null) {
@@ -99,7 +104,7 @@ class AdminController extends GetxController {
         errorMessage.value = 'Invalid email or password';
       }
     } catch (e) {
-      errorMessage.value = 'Login failed: ${e.toString()}';
+      errorMessage.value = e.toString().replaceAll('Exception: ', '');
     } finally {
       isLoading.value = false;
     }
@@ -125,7 +130,7 @@ class AdminController extends GetxController {
 
   Future<void> loadDashboardStats() async {
     try {
-      final stats = await _adminService.getDashboardStats();
+      final stats = await _dataService.getDashboardStats();
       dashboardStats.value = stats;
     } catch (e) {
       Get.snackbar(
@@ -143,8 +148,11 @@ class AdminController extends GetxController {
   Future<void> loadAllQuizzes() async {
     isLoadingQuizzes.value = true;
     try {
-      final loadedQuizzes = await _adminService.getAllQuizzes();
+      final loadedQuizzes = await _dataService.getAllQuizzes();
       quizzes.value = loadedQuizzes;
+
+      // Save to Hive cache
+      await _hiveService.saveQuizzes(loadedQuizzes);
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -161,7 +169,7 @@ class AdminController extends GetxController {
   Future<void> loadQuizzesByCourse(int courseId) async {
     isLoadingQuizzes.value = true;
     try {
-      final loadedQuizzes = await _adminService.getQuizzesByCourse(courseId);
+      final loadedQuizzes = await _dataService.getQuizzesByCourse(courseId);
       quizzes.value = loadedQuizzes;
     } catch (e) {
       Get.snackbar(
@@ -184,7 +192,7 @@ class AdminController extends GetxController {
     String difficulty = 'medium',
   }) async {
     try {
-      await _adminService.createQuiz(
+      final quiz = await _dataService.createQuiz(
         courseId: courseId,
         question: question,
         options: options,
@@ -224,7 +232,7 @@ class AdminController extends GetxController {
     String difficulty = 'medium',
   }) async {
     try {
-      await _adminService.updateQuiz(
+      await _dataService.updateQuiz(
         id: id,
         courseId: courseId,
         question: question,
@@ -257,7 +265,7 @@ class AdminController extends GetxController {
 
   Future<void> deleteQuiz(int id) async {
     try {
-      await _adminService.deleteQuiz(id);
+      await _dataService.deleteQuiz(id);
 
       Get.snackbar(
         'Success',
@@ -283,7 +291,7 @@ class AdminController extends GetxController {
 
   Future<void> loadAllUsersResults() async {
     try {
-      final results = await _adminService.getAllUsersResults();
+      final results = await _dataService.getAllUsersResults();
       userResults.value = results;
     } catch (e) {
       Get.snackbar(
