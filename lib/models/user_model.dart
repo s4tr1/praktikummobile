@@ -6,21 +6,24 @@ part 'user_model.g.dart';
 class UserModel extends HiveObject {
   @HiveField(0)
   String id; // UUID from Supabase Auth
-  
+
   @HiveField(1)
   String email;
-  
+
   @HiveField(2)
   String name;
-  
+
   @HiveField(3)
   String? avatarUrl;
-  
+
   @HiveField(4)
   DateTime? createdAt;
-  
+
   @HiveField(5)
   DateTime? lastLoginAt;
+
+  @HiveField(6)
+  String? role; // Add role field
 
   UserModel({
     required this.id,
@@ -29,6 +32,7 @@ class UserModel extends HiveObject {
     this.avatarUrl,
     this.createdAt,
     this.lastLoginAt,
+    this.role,
   });
 
   // From Supabase JSON
@@ -38,8 +42,8 @@ class UserModel extends HiveObject {
       email: json['email'] as String,
       name: json['name'] as String? ?? json['email'].split('@')[0],
       avatarUrl: json['avatar_url'] as String?,
-      createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at']) 
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
           : null,
       lastLoginAt: json['last_login_at'] != null
           ? DateTime.parse(json['last_login_at'])
@@ -66,9 +70,8 @@ class UserModel extends HiveObject {
       email: map['email'] as String,
       name: map['name'] as String,
       avatarUrl: map['avatar_url'] as String?,
-      createdAt: map['created_at'] != null 
-          ? DateTime.parse(map['created_at']) 
-          : null,
+      createdAt:
+          map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
     );
   }
 

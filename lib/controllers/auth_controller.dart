@@ -121,12 +121,18 @@ class AuthController extends GetxController {
 
       if (!autoLogin) {
         Get.snackbar(
-          'Success',
-          'Welcome back, ${user.name}!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
+          'Welcome Back! 👋',
+          'Hi ${user.name}, you\'re successfully logged in!',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green[600],
           colorText: Colors.white,
           duration: const Duration(seconds: 2),
+          margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+          icon: const Icon(Icons.check_circle_outline,
+              color: Colors.white, size: 28),
+          shouldIconPulse: true,
+          barBlur: 20,
         );
       }
 
@@ -163,10 +169,14 @@ class AuthController extends GetxController {
 
       Get.snackbar(
         'Logged Out',
-        'You have been logged out successfully',
+        'See you soon! 👋',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.grey[600],
+        backgroundColor: Colors.grey[700],
         colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(16),
+        borderRadius: 12,
+        icon: const Icon(Icons.exit_to_app, color: Colors.white),
       );
     } catch (e) {
       print('Logout error: $e');

@@ -111,27 +111,27 @@ class LoginView extends StatelessWidget {
 
                       // Password Field
                       Obx(() => TextField(
-                        controller: authCtrl.passwordController,
-                        obscureText: authCtrl.isPasswordHidden.value,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter your password',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              authCtrl.isPasswordHidden.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                            controller: authCtrl.passwordController,
+                            obscureText: authCtrl.isPasswordHidden.value,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              hintText: 'Enter your password',
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  authCtrl.isPasswordHidden.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: authCtrl.togglePasswordVisibility,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[50],
                             ),
-                            onPressed: authCtrl.togglePasswordVisibility,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[50],
-                        ),
-                      )),
+                          )),
                       const SizedBox(height: 12),
 
                       // Remember Me & Forgot Password
@@ -139,16 +139,16 @@ class LoginView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Obx(() => Row(
-                            children: [
-                              Checkbox(
-                                value: authCtrl.rememberMe.value,
-                                onChanged: (val) =>
-                                    authCtrl.toggleRememberMe(),
-                                activeColor: const Color(0xFF087E8B),
-                              ),
-                              const Text('Remember me'),
-                            ],
-                          )),
+                                children: [
+                                  Checkbox(
+                                    value: authCtrl.rememberMe.value,
+                                    onChanged: (val) =>
+                                        authCtrl.toggleRememberMe(),
+                                    activeColor: const Color(0xFF087E8B),
+                                  ),
+                                  const Text('Remember me'),
+                                ],
+                              )),
                           TextButton(
                             onPressed: () {
                               Get.snackbar(
@@ -199,36 +199,36 @@ class LoginView extends StatelessWidget {
 
                       // Login Button
                       Obx(() => ElevatedButton(
-                        onPressed: authCtrl.isLoading.value
-                            ? null
-                            : authCtrl.login,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: const Color(0xFF087E8B),
-                          disabledBackgroundColor: Colors.grey[300],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: authCtrl.isLoading.value
-                            ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white),
-                          ),
-                        )
-                            : const Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )),
+                            onPressed: authCtrl.isLoading.value
+                                ? null
+                                : authCtrl.login,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: const Color(0xFF087E8B),
+                              disabledBackgroundColor: Colors.grey[300],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: authCtrl.isLoading.value
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                          )),
                       const SizedBox(height: 16),
 
                       // Register Link

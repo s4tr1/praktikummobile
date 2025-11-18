@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../services/supabase_auth_service.dart';
 import '../services/hive_service.dart';
-import '../routes/app_routes.dart';
 
 class RegisterController extends GetxController {
   final nameController = TextEditingController();
@@ -34,6 +33,9 @@ class RegisterController extends GetxController {
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
 
+    // Clear previous error
+    errorMessage.value = '';
+
     // Validation
     if (name.isEmpty ||
         email.isEmpty ||
@@ -58,42 +60,122 @@ class RegisterController extends GetxController {
       return;
     }
 
+    // Start loading
     isLoading.value = true;
-    errorMessage.value = '';
+    print('🚀 RegisterController: Starting registration...');
 
     try {
-      // Register with Supabase
+      // Call auth service
+      print('📞 RegisterController: Calling auth service...');
       final user = await _authService.registerUser(
         email: email,
         password: password,
         name: name,
       );
 
-      if (user == null) {
-        errorMessage.value = 'Registration failed. Please try again.';
-        isLoading.value = false;
-        return;
+      print('✅ RegisterController: Registration completed!');
+      print('   User: ${user?.name ?? "null"}');
+
+      // Stop loading
+      isLoading.value = false;
+
+      // Save to cache if user exists
+      if (user != null) {
+        try {
+          await _hiveService.saveUser(user);
+          print('✅ User cached locally');
+        } catch (cacheError) {
+          print('⚠️ Cache error (non-critical): $cacheError');
+        }
       }
 
-      // Save to local cache
-      await _hiveService.saveUser(user);
-
-      // Success
+      // ============ SHOW SUCCESS NOTIFICATION ============
+      print('🎉 Showing success notification...');
       Get.snackbar(
-        'Success',
-        'Account created successfully! Please check your email to verify your account.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
+        'Registration Successful! 🎉',
+        'Your account has been created. Please login to continue.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: const Color(0xFF4CAF50), // Green
         colorText: Colors.white,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 4),
+        margin: const EdgeInsets.all(16),
+        borderRadius: 12,
+        icon: const Icon(Icons.check_circle, color: Colors.white, size: 30),
+        shouldIconPulse: true,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.easeOutBack,
       );
 
-      // Navigate back to login
+      // Clear form fields
+      print('🧹 Clearing form...');
+      nameController.clear();
+      emailController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
+
+      // Wait a moment then navigate back
+      await Future.delayed(const Duration(milliseconds: 800));
+      print('⬅️ Navigating back to login...');
       Get.back();
+
+      print('✅ Registration flow completed successfully!');
     } catch (e) {
-      errorMessage.value = e.toString().replaceAll('Exception: ', '');
-    } finally {
+      print('❌ RegisterController: Error caught!');
+      print('   Error type: ${e.runtimeType}');
+      print('   Error message: $e');
+
       isLoading.value = false;
+
+      final errorString = e.toString().toLowerCase();
+
+      // Check if it's a success message disguised as error
+      if (errorString.contains('account created successfully') ||
+          errorString.contains('please try logging in') ||
+          errorString.contains('registration successful')) {
+        print(
+            '🎉 Success case detected in error! Showing success notification...');
+
+        // This is actually SUCCESS!
+        Get.snackbar(
+          'Registration Successful! 🎉',
+          'Your account has been created. Please login to continue.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: const Color(0xFF4CAF50),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+          margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+          icon: const Icon(Icons.check_circle, color: Colors.white, size: 30),
+          shouldIconPulse: true,
+        );
+
+        // Clear form
+        nameController.clear();
+        emailController.clear();
+        passwordController.clear();
+        confirmPasswordController.clear();
+
+        await Future.delayed(const Duration(milliseconds: 800));
+        Get.back();
+      } else {
+        // Real error
+        print('❌ Real error detected');
+        errorMessage.value = e.toString().replaceAll('Exception: ', '');
+
+        // Show error snackbar too
+        Get.snackbar(
+          'Registration Failed',
+          errorMessage.value,
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red[600],
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+          margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+          icon: const Icon(Icons.error, color: Colors.white, size: 30),
+        );
+      }
     }
   }
 

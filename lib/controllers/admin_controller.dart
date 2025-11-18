@@ -129,16 +129,30 @@ class AdminController extends GetxController {
   // ========== DASHBOARD ==========
 
   Future<void> loadDashboardStats() async {
+    print('🔵 AdminController: Loading dashboard stats...');
+
     try {
+      print('📞 Calling getDashboardStats()...');
       final stats = await _dataService.getDashboardStats();
+
+      print('✅ Stats received:');
+      print('   Users: ${stats['total_users']}');
+      print('   Quizzes: ${stats['total_quizzes']}');
+      print('   Courses: ${stats['total_courses']}');
+      print('   Attempts: ${stats['total_attempts']}');
+
       dashboardStats.value = stats;
     } catch (e) {
+      print('❌ Error loading dashboard stats: $e');
+      print('   Error type: ${e.runtimeType}');
+
       Get.snackbar(
         'Error',
         'Failed to load dashboard stats: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
+        duration: const Duration(seconds: 5),
       );
     }
   }

@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'routes/app_routes.dart';
 import 'controllers/course_controller.dart';
 import 'controllers/auth_controller.dart';
+import 'controllers/admin_controller.dart'; // ADD THIS LINE
 import 'controllers/quiz_controller.dart';
 import 'controllers/quiz_controller_dio.dart';
 import 'services/hive_service.dart';
@@ -32,6 +33,9 @@ void main() async {
     // Initialize controllers
     Get.put(CourseController());
     Get.put(AuthController(), permanent: true);
+
+    // Register AdminController as lazy (will initialize when needed)
+    Get.lazyPut<AdminController>(() => AdminController(), fenix: true);
 
     // Lazy load quiz controllers
     Get.lazyPut<QuizController>(() => QuizController());
