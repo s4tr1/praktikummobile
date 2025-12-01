@@ -1,0 +1,22 @@
+{
+  "basic_grammar": [
+    {
+      "id": "q1",
+      "question": "She ___ to school every day.",
+      "options": ["go", "goes", "going", "gone"],
+      "answer_index": 1
+    },
+    {
+      "id": "q2",
+      "question": "They ___ football on Sundays.",
+      "options": ["play", "plays", "played", "playing"],
+      "answer_index": 0
+    },
+    {
+      "id": "q3",
+      "question": "I ___ breakfast at 7 AM.",
+      "options": ["eat", "eats", "eating", "ate"],
+      "answer_index": 0
+    }
+  ]
+}
