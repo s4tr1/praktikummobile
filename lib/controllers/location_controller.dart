@@ -1,6 +1,9 @@
+import 'dart:convert'; // ADDED
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http; // ADDED
+import 'package:url_launcher/url_launcher.dart';
 import '../models/branch_model.dart';
 import '../services/location_service.dart';
 import '../services/branch_service.dart';
@@ -26,6 +29,10 @@ class LocationController extends GetxController {
   final mapZoom = 13.0.obs;
   final showUserMarker = true.obs;
 
+  // ADDED: route points for polyline in-app (Directions)
+  final routePoints = <LatLng>[].obs;
+  final isRouting = false.obs; // optional: to show loading while route fetched
+
   @override
   void onInit() {
     super.onInit();
@@ -44,13 +51,7 @@ class LocationController extends GetxController {
     errorMessage.value = '';
 
     try {
-      // Get branches from Supabase
-      // For demo, use sample data
       branches.value = _branchService.getSampleBranches();
-
-      // In production, use:
-      // branches.value = await _branchService.getAllBranches();
-
       print('✅ Loaded ${branches.length} branches');
     } catch (e) {
       errorMessage.value = 'Failed to load branches: ${e.toString()}';
@@ -147,8 +148,6 @@ class LocationController extends GetxController {
   // Select branch
   void selectBranch(BranchModel branch) {
     selectedBranch.value = branch;
-
-    // Center map on selected branch
     mapZoom.value = 16.0;
   }
 
@@ -156,6 +155,7 @@ class LocationController extends GetxController {
   void clearSelection() {
     selectedBranch.value = null;
     mapZoom.value = 13.0;
+    routePoints.clear(); // clear route when selection cleared
   }
 
   // Get distance to branch
@@ -231,20 +231,35 @@ class LocationController extends GetxController {
     return _locationService.getProviderIcon(currentProvider.value);
   }
 
-  // Open in Google Maps
-  void openInGoogleMaps(BranchModel branch) async {
-    final url = branch.googleMapsUrl;
-    // Use url_launcher package
-    Get.snackbar(
-      'Opening Maps',
-      'Launching Google Maps...',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 1),
-    );
+  // PERBAIKAN: Open in Google Maps dengan url_launcher (fallback)
+  Future<void> openInGoogleMaps(BranchModel branch) async {
+    final url = Uri.parse(branch.googleMapsUrl);
+    
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        Get.snackbar(
+          'Error',
+          'Could not open Google Maps',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to open Google Maps: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
-  // Get directions
-  void getDirections(BranchModel branch) async {
+  // OLD: external get directions (ke Google Maps) - tetap disimpan sebagai fallback
+  Future<void> getDirections(BranchModel branch) async {
     if (userLocation.value == null) {
       Get.snackbar(
         'Error',
@@ -256,36 +271,187 @@ class LocationController extends GetxController {
       return;
     }
 
-    final url = branch.getDirectionsUrl(userLocation.value!);
-    // Use url_launcher package
-    Get.snackbar(
-      'Getting Directions',
-      'Opening navigation...',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 1),
-    );
-  }
-
-  // Call branch
-  void callBranch(BranchModel branch) {
-    if (branch.phone != null) {
+    final urlString = branch.getDirectionsUrl(userLocation.value!);
+    final url = Uri.parse(urlString);
+    
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+        
+        Get.snackbar(
+          'Opening Navigation',
+          'Launching Google Maps...',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          'Could not open navigation',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
       Get.snackbar(
-        'Calling',
-        branch.phone!,
+        'Error',
+        'Failed to open navigation: $e',
         snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 1),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
     }
   }
 
-  // Email branch
-  void emailBranch(BranchModel branch) {
-    if (branch.email != null) {
+  // -----------------------
+  // NEW: Get internal directions (draw route in-app)
+  // Uses OSRM public server (no API key). Works well for demo.
+  // -----------------------
+  Future<void> getDirectionsInternal(BranchModel branch) async {
+    if (userLocation.value == null) {
       Get.snackbar(
-        'Opening Email',
-        branch.email!,
+        'Error',
+        'Location not available. Please allow location permission.',
         snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 1),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    try {
+      isRouting.value = true;
+      routePoints.clear();
+
+      final start = userLocation.value!;
+      final end = branch.coordinates;
+
+      // OSRM HTTP API (public)
+      final url = Uri.parse(
+        'https://router.project-osrm.org/route/v1/driving/'
+        '${start.longitude},${start.latitude};${end.longitude},${end.latitude}'
+        '?overview=full&geometries=geojson',
+      );
+
+      final resp = await http.get(url).timeout(const Duration(seconds: 10));
+
+      if (resp.statusCode != 200) {
+        throw Exception('Routing API returned ${resp.statusCode}');
+      }
+
+      final data = jsonDecode(resp.body);
+
+      if (data['routes'] == null || data['routes'].isEmpty) {
+        throw Exception('No route found');
+      }
+
+      final coords = data['routes'][0]['geometry']['coordinates'] as List<dynamic>;
+
+      final List<LatLng> pts = coords.map<LatLng>((c) {
+        final double lon = (c[0] as num).toDouble();
+        final double lat = (c[1] as num).toDouble();
+        return LatLng(lat, lon);
+      }).toList();
+
+      routePoints.assignAll(pts);
+
+      // Keep selected branch for UI highlight
+      selectedBranch.value = branch;
+
+      Get.snackbar(
+        'Route ready',
+        'Route displayed on map.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Routing Error',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isRouting.value = false;
+    }
+  }
+
+  // PERBAIKAN: Call branch dengan url_launcher
+  Future<void> callBranch(BranchModel branch) async {
+    if (branch.phone == null) return;
+    
+    // Remove spaces and format phone number
+    final phoneNumber = branch.phone!.replaceAll(RegExp(r'[^0-9+]'), '');
+    final url = Uri.parse('tel:$phoneNumber');
+    
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+        
+        Get.snackbar(
+          'Calling',
+          branch.phone!,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 1),
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          'Could not make call',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to make call: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  // PERBAIKAN: Email branch dengan url_launcher
+  Future<void> emailBranch(BranchModel branch) async {
+    if (branch.email == null) return;
+    
+    final url = Uri.parse('mailto:${branch.email}');
+    
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+        
+        Get.snackbar(
+          'Opening Email',
+          branch.email!,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 1),
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          'Could not open email',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to open email: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
     }
   }

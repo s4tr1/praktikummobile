@@ -4,7 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../controllers/location_controller.dart';
 import '../models/branch_model.dart';
-import '../services/location_service.dart'; // ⭐ TAMBAHKAN INI
+import '../services/location_service.dart';
 
 class BranchLocationView extends StatelessWidget {
   const BranchLocationView({super.key});
@@ -35,17 +35,20 @@ class BranchLocationView extends StatelessWidget {
                 isGps ? Icons.gps_fixed : Icons.gps_not_fixed,
                 color: Colors.white,
               ),
+              tooltip: isGps ? 'GPS Mode (Accurate)' : 'Network Mode (Fast)',
               onPressed: () => _showProviderDialog(context, ctrl),
             );
           }),
           // Refresh location
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white),
+            tooltip: 'Refresh Location',
             onPressed: () => ctrl.refreshLocation(),
           ),
         ],
       ),
       body: Obx(() {
+        // Loading state
         if (ctrl.isLoading.value) {
           return const Center(
             child: Column(
@@ -55,6 +58,42 @@ class BranchLocationView extends StatelessWidget {
                 SizedBox(height: 16),
                 Text('Loading branches...'),
               ],
+            ),
+          );
+        }
+
+        // Error state
+        if (ctrl.errorMessage.value.isNotEmpty && ctrl.branches.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error Loading Branches',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    ctrl.errorMessage.value,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () => ctrl.loadBranches(),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -179,24 +218,32 @@ class BranchLocationView extends StatelessWidget {
                       ),
                       // List
                       Expanded(
-                        child: Obx(() => ListView.builder(
-                          controller: scrollController,
-                          itemCount: ctrl.branches.length,
-                          itemBuilder: (context, index) {
-                            final branch = ctrl.branches[index];
-                            return _BranchListItem(
-                              branch: branch,
-                              ctrl: ctrl,
-                              onTap: () {
-                                ctrl.selectBranch(branch);
-                                mapController.move(
-                                  branch.coordinates,
-                                  16.0,
-                                );
-                              },
+                        child: Obx(() {
+                          if (ctrl.branches.isEmpty) {
+                            return const Center(
+                              child: Text('No branches found'),
                             );
-                          },
-                        )),
+                          }
+                          
+                          return ListView.builder(
+                            controller: scrollController,
+                            itemCount: ctrl.branches.length,
+                            itemBuilder: (context, index) {
+                              final branch = ctrl.branches[index];
+                              return _BranchListItem(
+                                branch: branch,
+                                ctrl: ctrl,
+                                onTap: () {
+                                  ctrl.selectBranch(branch);
+                                  mapController.move(
+                                    branch.coordinates,
+                                    16.0,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        }),
                       ),
                     ],
                   ),
@@ -214,11 +261,18 @@ class BranchLocationView extends StatelessWidget {
                   FloatingActionButton.small(
                     heroTag: 'center_user',
                     backgroundColor: Colors.white,
+                    tooltip: 'Center on my location',
                     onPressed: () {
                       if (ctrl.userLocation.value != null) {
                         mapController.move(
                           ctrl.userLocation.value!,
                           15.0,
+                        );
+                      } else {
+                        Get.snackbar(
+                          'Location Unavailable',
+                          'Please enable location first',
+                          snackPosition: SnackPosition.BOTTOM,
                         );
                       }
                     },
@@ -229,6 +283,7 @@ class BranchLocationView extends StatelessWidget {
                   FloatingActionButton.small(
                     heroTag: 'zoom_in',
                     backgroundColor: Colors.white,
+                    tooltip: 'Zoom in',
                     onPressed: () {
                       final currentZoom = mapController.camera.zoom;
                       mapController.move(
@@ -243,6 +298,7 @@ class BranchLocationView extends StatelessWidget {
                   FloatingActionButton.small(
                     heroTag: 'zoom_out',
                     backgroundColor: Colors.white,
+                    tooltip: 'Zoom out',
                     onPressed: () {
                       final currentZoom = mapController.camera.zoom;
                       mapController.move(
@@ -305,6 +361,49 @@ class BranchLocationView extends StatelessWidget {
               );
             }).toList(),
           ),
+      // setelah TileLayer dan MarkerLayer, tambahkan:
+
+      // 1) Polyline layer (gambarkan rute jika ada)
+      Obx(() {
+        if (ctrl.routePoints.isEmpty) return const SizedBox.shrink();
+        return PolylineLayer(
+          polylines: [
+            Polyline(
+              points: ctrl.routePoints,
+              strokeWidth: 5.0,
+              // jangan set custom color jika modul kamu tidak mengizinkan styling - tapi biasanya ok
+              color: Colors.blue,
+            ),
+          ],
+        );
+      }),
+
+      // 2) (Optional) Zoom / fit bounds ke route - lakukan setelah widget dirender
+      Obx(() {
+        if (ctrl.routePoints.isEmpty) return const SizedBox.shrink();
+
+        // Build LatLngBounds
+        final points = ctrl.routePoints;
+        final latitudes = points.map((p) => p.latitude).toList();
+        final longitudes = points.map((p) => p.longitude).toList();
+
+        final sw = LatLng(latitudes.reduce((a,b)=> a<b?a:b), longitudes.reduce((a,b)=> a<b?a:b));
+        final ne = LatLng(latitudes.reduce((a,b)=> a>b?a:b), longitudes.reduce((a,b)=> a>b?a:b));
+
+        // Schedule a small delay to ensure mapController is ready
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          try {
+            mapController.fitBounds(
+              LatLngBounds(sw, ne),
+              options: FitBoundsOptions(padding: EdgeInsets.all(40)),
+            );
+          } catch (e) {
+            // ignore if mapController isn't ready yet
+          }
+        });
+
+        return const SizedBox.shrink();
+      }),
 
           // User location marker
           if (userLoc != null && ctrl.showUserMarker.value)
@@ -480,7 +579,13 @@ class _BranchListItem extends StatelessWidget {
                   _ActionButton(
                     icon: Icons.directions,
                     label: 'Directions',
-                    onTap: () => ctrl.getDirections(branch),
+                    onTap: () => ctrl.getDirectionsInternal(branch),
+                  ),
+                  const SizedBox(width: 8),
+                  _ActionButton(
+                    icon: Icons.map,
+                    label: 'Maps',
+                    onTap: () => ctrl.openInGoogleMaps(branch),
                   ),
                 ],
               ),
@@ -533,3 +638,4 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
+
