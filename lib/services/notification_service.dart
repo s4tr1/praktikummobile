@@ -11,8 +11,6 @@ import 'dart:io';
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('🔔 Background message received: ${message.messageId}');
-  print('   Title: ${message.notification?.title}');
-  print('   Body: ${message.notification?.body}');
 }
 
 class NotificationService {
@@ -21,10 +19,15 @@ class NotificationService {
 
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   String? _fcmToken;
   bool _isInitialized = false;
+
+  // Definisi Pola Getaran
+  static final Int64List _vibHigh = Int64List.fromList([0, 500, 200, 500]);
+  static final Int64List _vibReminder =
+      Int64List.fromList([0, 300, 100, 300, 100, 300]);
 
   // ========== INITIALIZATION ==========
 
@@ -36,7 +39,11 @@ class NotificationService {
 
       // 1. Initialize timezone
       tz.initializeTimeZones();
-      tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
+      try {
+        tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
+      } catch (e) {
+        tz.setLocalLocation(tz.UTC); // Fallback
+      }
 
       // 2. Request permissions
       await _requestPermissions();
@@ -58,42 +65,24 @@ class NotificationService {
   // ========== PERMISSIONS ==========
 
   Future<void> _requestPermissions() async {
-    print('📱 Requesting notification permissions...');
-
     if (Platform.isAndroid) {
-      if (await Permission.notification.isDenied) {
-        final status = await Permission.notification.request();
-        print('   Android notification permission: $status');
-      }
-
-      // Android 13+ exact alarm permission
-      if (await Permission.scheduleExactAlarm.isDenied) {
-        final status = await Permission.scheduleExactAlarm.request();
-        print('   Exact alarm permission: $status');
-      }
+      await Permission.notification.request();
+      await Permission.scheduleExactAlarm.request();
     } else if (Platform.isIOS) {
-      final settings = await _fcm.requestPermission(
+      await _fcm.requestPermission(
         alert: true,
         badge: true,
         sound: true,
-        announcement: false,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
       );
-      print('   iOS notification permission: ${settings.authorizationStatus}');
     }
   }
 
   // ========== LOCAL NOTIFICATIONS SETUP ==========
 
   Future<void> _initializeLocalNotifications() async {
-    print('🔔 Setting up local notifications...');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    // Android settings
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    // iOS settings
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -110,10 +99,7 @@ class NotificationService {
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
 
-    // Create notification channels for Android
     await _createNotificationChannels();
-
-    print('✅ Local notifications initialized');
   }
 
   Future<void> _createNotificationChannels() async {
@@ -121,7 +107,7 @@ class NotificationService {
 
     print('📱 Creating Android notification channels...');
 
-    // HIGH IMPORTANCE CHANNEL (with custom sound)
+    // Channel 1: High Importance (Quiz Selesai)
     final highImportanceChannel = AndroidNotificationChannel(
       'conatus_high_importance',
       'High Importance Notifications',
@@ -130,10 +116,10 @@ class NotificationService {
       playSound: true,
       sound: const RawResourceAndroidNotificationSound('quiz_complete'),
       enableVibration: true,
-      vibrationPattern: Int64List.fromList([0, 500, 200, 500]),
+      vibrationPattern: _vibHigh,
     );
 
-    // REMINDER CHANNEL (with custom sound)
+    // Channel 2: Reminder (Jadwal Belajar)
     final reminderChannel = AndroidNotificationChannel(
       'conatus_reminders',
       'Study Reminders',
@@ -142,85 +128,56 @@ class NotificationService {
       playSound: true,
       sound: const RawResourceAndroidNotificationSound('study_reminder'),
       enableVibration: true,
-      vibrationPattern: Int64List.fromList([0, 300, 100, 300, 100, 300]),
+      vibrationPattern: _vibReminder,
     );
 
+    final plugin = _localNotifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
 
-    await _localNotifications
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(highImportanceChannel);
-
-    await _localNotifications
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(reminderChannel);
-
-    print('✅ Notification channels created');
+    await plugin?.createNotificationChannel(highImportanceChannel);
+    await plugin?.createNotificationChannel(reminderChannel);
   }
 
   // ========== FIREBASE MESSAGING SETUP ==========
 
   Future<void> _initializeFirebaseMessaging() async {
-    print('🔥 Setting up Firebase Messaging...');
-
-    // Set background message handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-    // Get FCM token
     _fcmToken = await _fcm.getToken();
     print('📱 FCM Token: $_fcmToken');
 
-    // Listen to token refresh
     _fcm.onTokenRefresh.listen((newToken) {
       _fcmToken = newToken;
-      print('🔄 FCM Token refreshed: $newToken');
-      // TODO: Send to your backend server
     });
 
-    // Handle foreground messages
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-    // Handle notification taps when app is in background
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
 
-    // Check if app was opened from terminated state
     RemoteMessage? initialMessage = await _fcm.getInitialMessage();
     if (initialMessage != null) {
       _handleNotificationTap(initialMessage);
     }
-
-    print('✅ Firebase Messaging initialized');
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
-    print('🔔 Foreground message received');
-    print('   Title: ${message.notification?.title}');
-    print('   Body: ${message.notification?.body}');
-    print('   Data: ${message.data}');
-
-    // Show local notification when app is in foreground
     _showLocalNotification(
       title: message.notification?.title ?? 'Conatus Academy',
       body: message.notification?.body ?? '',
       payload: message.data.toString(),
+      // Default ke high importance jika dari FCM
+      channelId: 'conatus_high_importance',
     );
   }
 
   void _handleNotificationTap(RemoteMessage message) {
-    print('👆 Notification tapped: ${message.messageId}');
-    print('   Data: ${message.data}');
-
-    // Navigate based on notification data
-    // TODO: Add navigation logic here
+    print('👆 Notification tapped: ${message.data}');
   }
 
   void _onNotificationTapped(NotificationResponse response) {
     print('👆 Local notification tapped: ${response.payload}');
-    // TODO: Add navigation logic here
   }
 
-  // ========== SHOW LOCAL NOTIFICATIONS ==========
+  // ========== SHOW LOCAL NOTIFICATIONS (LOGIC FIX DISINI) ==========
 
   Future<void> _showLocalNotification({
     required String title,
@@ -228,26 +185,35 @@ class NotificationService {
     String? payload,
     String channelId = 'conatus_high_importance',
   }) async {
+    // Logic untuk menentukan properti berdasarkan channelId
+    final isReminder = channelId == 'conatus_reminders';
+
+    // Tentukan nama channel, sound, dan vibration sesuai ID
+    final channelName =
+        isReminder ? 'Study Reminders' : 'High Importance Notifications';
+    final soundName = isReminder ? 'study_reminder' : 'quiz_complete';
+    final vibration = isReminder ? _vibReminder : _vibHigh;
+
     final androidDetails = AndroidNotificationDetails(
-      'conatus_high_importance',
-      'High Importance Notifications',
-      channelDescription: 'Important notifications',
+      channelId, // Gunakan variabel channelId
+      channelName, // Gunakan nama yang sesuai
+      channelDescription: 'Conatus notifications',
       importance: Importance.high,
       priority: Priority.high,
       playSound: true,
-      sound: const RawResourceAndroidNotificationSound('quiz_complete'),
+      // Pastikan file mp3 ada di android/app/src/main/res/raw/
+      sound: RawResourceAndroidNotificationSound(soundName),
       enableVibration: true,
-      vibrationPattern: Int64List.fromList([0, 500, 200, 500]),
+      vibrationPattern: vibration,
       icon: '@mipmap/ic_launcher',
       color: const Color(0xFF087E8B),
-      largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
     );
 
-    const iosDetails = DarwinNotificationDetails(
+    final iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
-      sound: 'quiz_complete.aiff',
+      sound: '$soundName.aiff', // iOS butuh format aiff/caf/wav
     );
 
     final details = NotificationDetails(
@@ -255,15 +221,17 @@ class NotificationService {
       iOS: iosDetails,
     );
 
+    // Gunakan ID unik berdasarkan waktu agar notifikasi tidak saling menimpa
+    final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
     await _localNotifications.show(
-      DateTime.now().millisecondsSinceEpoch,
+      id,
       title,
       body,
       details,
       payload: payload,
     );
   }
-
 
   // ========== QUIZ COMPLETION NOTIFICATION ==========
 
@@ -276,17 +244,15 @@ class NotificationService {
     final emoji = percentage >= 80
         ? '🎉'
         : percentage >= 60
-        ? '👏'
-        : '💪';
+            ? '👏'
+            : '💪';
 
     await _showLocalNotification(
       title: '$emoji Quiz Selesai!',
       body: 'Skor Anda: $score/$total ($percentage%) - $courseName',
       payload: 'quiz_completed',
-      channelId: 'conatus_high_importance',
+      channelId: 'conatus_high_importance', // Menggunakan channel Quiz
     );
-
-    print('✅ Quiz completion notification sent');
   }
 
   // ========== DAILY STUDY REMINDER ==========
@@ -296,8 +262,7 @@ class NotificationService {
   }) async {
     print('⏰ Scheduling daily reminder at ${time.hour}:${time.minute}');
 
-    // Cancel existing reminders first
-    await _localNotifications.cancel(999);
+    await _localNotifications.cancel(999); // Cancel ID khusus reminder (999)
 
     final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(
@@ -309,7 +274,6 @@ class NotificationService {
       time.minute,
     );
 
-    // If time has passed today, schedule for tomorrow
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -323,11 +287,11 @@ class NotificationService {
       playSound: true,
       sound: const RawResourceAndroidNotificationSound('study_reminder'),
       enableVibration: true,
-      vibrationPattern: Int64List.fromList([0, 300, 100, 300, 100, 300]),
+      vibrationPattern: _vibReminder,
       icon: '@mipmap/ic_launcher',
       color: const Color(0xFF087E8B),
       styleInformation: const BigTextStyleInformation(
-        'Sudah waktunya belajar! Jangan lupa selesaikan quiz hari ini. Konsistensi adalah kunci sukses! 📚',
+        'Sudah waktunya belajar! Jangan lupa selesaikan quiz hari ini.',
       ),
     );
 
@@ -339,21 +303,17 @@ class NotificationService {
     );
 
     await _localNotifications.zonedSchedule(
-      999, // Notification ID for daily reminder
+      999, // ID Tetap 999 untuk reminder
       '📚 Waktunya Belajar!',
       'Jangan lupa selesaikan quiz hari ini. Ayo tingkatkan skill English-mu!',
       scheduledDate,
-       NotificationDetails(
-        android: androidDetails,
-        iOS: iosDetails,
-      ),
+      NotificationDetails(android: androidDetails, iOS: iosDetails),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time, // Repeat daily
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
     );
 
-    // Save to preferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('reminder_hour', time.hour);
     await prefs.setInt('reminder_minute', time.minute);
@@ -364,10 +324,8 @@ class NotificationService {
 
   Future<void> cancelDailyReminder() async {
     await _localNotifications.cancel(999);
-
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('reminder_enabled', false);
-
     print('🔕 Daily reminder cancelled');
   }
 
@@ -382,8 +340,6 @@ class NotificationService {
 
     return TimeOfDay(hour: hour, minute: minute);
   }
-
-  // ========== GETTERS ==========
 
   String? get fcmToken => _fcmToken;
   bool get isInitialized => _isInitialized;
