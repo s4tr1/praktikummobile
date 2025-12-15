@@ -122,28 +122,29 @@ class NotificationService {
     print('📱 Creating Android notification channels...');
 
     // HIGH IMPORTANCE CHANNEL (with custom sound)
-    const highImportanceChannel = AndroidNotificationChannel(
+    final highImportanceChannel = AndroidNotificationChannel(
       'conatus_high_importance',
       'High Importance Notifications',
       description: 'For important notifications like quiz completion',
       importance: Importance.high,
       playSound: true,
-      sound: RawResourceAndroidNotificationSound('quiz_complete'),
+      sound: const RawResourceAndroidNotificationSound('quiz_complete'),
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 500, 200, 500]),
     );
 
     // REMINDER CHANNEL (with custom sound)
-    const reminderChannel = AndroidNotificationChannel(
+    final reminderChannel = AndroidNotificationChannel(
       'conatus_reminders',
       'Study Reminders',
       description: 'Daily study reminder notifications',
       importance: Importance.high,
       playSound: true,
-      sound: RawResourceAndroidNotificationSound('study_reminder'),
+      sound: const RawResourceAndroidNotificationSound('study_reminder'),
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 300, 100, 300, 100, 300]),
     );
+
 
     await _localNotifications
         .resolvePlatformSpecificImplementation<
@@ -227,19 +228,19 @@ class NotificationService {
     String? payload,
     String channelId = 'conatus_high_importance',
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'conatus_high_importance',
       'High Importance Notifications',
       channelDescription: 'Important notifications',
       importance: Importance.high,
       priority: Priority.high,
       playSound: true,
-      sound: RawResourceAndroidNotificationSound('quiz_complete'),
+      sound: const RawResourceAndroidNotificationSound('quiz_complete'),
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 500, 200, 500]),
       icon: '@mipmap/ic_launcher',
-      color: Color(0xFF087E8B),
-      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+      color: const Color(0xFF087E8B),
+      largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -249,19 +250,20 @@ class NotificationService {
       sound: 'quiz_complete.aiff',
     );
 
-    const details = NotificationDetails(
+    final details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
 
     await _localNotifications.show(
-      DateTime.now().millisecond,
+      DateTime.now().millisecondsSinceEpoch,
       title,
       body,
       details,
       payload: payload,
     );
   }
+
 
   // ========== QUIZ COMPLETION NOTIFICATION ==========
 
@@ -312,19 +314,19 @@ class NotificationService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'conatus_reminders',
       'Study Reminders',
       channelDescription: 'Daily study reminders',
       importance: Importance.high,
       priority: Priority.high,
       playSound: true,
-      sound: RawResourceAndroidNotificationSound('study_reminder'),
+      sound: const RawResourceAndroidNotificationSound('study_reminder'),
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 300, 100, 300, 100, 300]),
       icon: '@mipmap/ic_launcher',
-      color: Color(0xFF087E8B),
-      styleInformation: BigTextStyleInformation(
+      color: const Color(0xFF087E8B),
+      styleInformation: const BigTextStyleInformation(
         'Sudah waktunya belajar! Jangan lupa selesaikan quiz hari ini. Konsistensi adalah kunci sukses! 📚',
       ),
     );
@@ -341,7 +343,7 @@ class NotificationService {
       '📚 Waktunya Belajar!',
       'Jangan lupa selesaikan quiz hari ini. Ayo tingkatkan skill English-mu!',
       scheduledDate,
-      const NotificationDetails(
+       NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
       ),
