@@ -60,8 +60,9 @@ class LoginView extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -96,6 +97,7 @@ class LoginView extends StatelessWidget {
                       TextField(
                         controller: authCtrl.emailController,
                         keyboardType: TextInputType.emailAddress,
+                        style: const TextStyle(fontSize: 16),
                         decoration: InputDecoration(
                           labelText: 'Email',
                           hintText: 'Enter your email',
@@ -103,8 +105,23 @@ class LoginView extends StatelessWidget {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF087E8B),
+                              width: 2,
+                            ),
+                          ),
                           filled: true,
                           fillColor: Colors.grey[50],
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -113,6 +130,7 @@ class LoginView extends StatelessWidget {
                       Obx(() => TextField(
                             controller: authCtrl.passwordController,
                             obscureText: authCtrl.isPasswordHidden.value,
+                            style: const TextStyle(fontSize: 16),
                             decoration: InputDecoration(
                               labelText: 'Password',
                               hintText: 'Enter your password',
@@ -122,14 +140,31 @@ class LoginView extends StatelessWidget {
                                   authCtrl.isPasswordHidden.value
                                       ? Icons.visibility_off
                                       : Icons.visibility,
+                                  color: Colors.grey[600],
                                 ),
                                 onPressed: authCtrl.togglePasswordVisibility,
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide:
+                                    BorderSide(color: Colors.grey[300]!),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF087E8B),
+                                  width: 2,
+                                ),
+                              ),
                               filled: true,
                               fillColor: Colors.grey[50],
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
                             ),
                           )),
                       const SizedBox(height: 12),
@@ -138,16 +173,29 @@ class LoginView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Obx(() => Row(
-                                children: [
-                                  Checkbox(
-                                    value: authCtrl.rememberMe.value,
-                                    onChanged: (val) =>
-                                        authCtrl.toggleRememberMe(),
-                                    activeColor: const Color(0xFF087E8B),
-                                  ),
-                                  const Text('Remember me'),
-                                ],
+                          Obx(() => InkWell(
+                                onTap: authCtrl.toggleRememberMe,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: Checkbox(
+                                        value: authCtrl.rememberMe.value,
+                                        onChanged: (val) =>
+                                            authCtrl.toggleRememberMe(),
+                                        activeColor: const Color(0xFF087E8B),
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      'Remember me',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
                               )),
                           TextButton(
                             onPressed: () {
@@ -155,12 +203,24 @@ class LoginView extends StatelessWidget {
                                 'Info',
                                 'Feature coming soon!',
                                 snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.blue[100],
+                                colorText: Colors.blue[900],
+                                margin: const EdgeInsets.all(16),
+                                borderRadius: 8,
+                                duration: const Duration(seconds: 2),
                               );
                             },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                            ),
                             child: Text(
                               'Forgot Password?',
                               style: TextStyle(
                                 color: Colors.indigo[600],
+                                fontSize: 14,
                               ),
                             ),
                           ),
@@ -187,7 +247,10 @@ class LoginView extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     authCtrl.errorMessage.value,
-                                    style: TextStyle(color: Colors.red[600]),
+                                    style: TextStyle(
+                                      color: Colors.red[600],
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -209,6 +272,7 @@ class LoginView extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
+                              elevation: 2,
                             ),
                             child: authCtrl.isLoading.value
                                 ? const SizedBox(
@@ -226,6 +290,7 @@ class LoginView extends StatelessWidget {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
+                                      letterSpacing: 0.5,
                                     ),
                                   ),
                           )),
@@ -235,16 +300,27 @@ class LoginView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Don't have an account?"),
+                          Text(
+                            "Don't have an account?",
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 14,
+                            ),
+                          ),
                           TextButton(
-                            onPressed: () {
-                              Get.toNamed('/register');
-                            },
+                            onPressed: () => Get.toNamed('/register'),
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                            ),
                             child: Text(
                               'Register',
                               style: TextStyle(
                                 color: Colors.indigo[600],
                                 fontWeight: FontWeight.w600,
+                                fontSize: 14,
                               ),
                             ),
                           ),
@@ -284,8 +360,8 @@ class LoginView extends StatelessWidget {
                     border: Border.all(color: Colors.white.withOpacity(0.3)),
                   ),
                   child: Column(
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Demo Credentials',
                         style: TextStyle(
                           color: Colors.white,
@@ -293,18 +369,20 @@ class LoginView extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'Email: sarah@conatus.com\nPassword: sarah123',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white70,
+                          color: Colors.white.withOpacity(0.9),
                           fontSize: 12,
+                          height: 1.5,
                         ),
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),

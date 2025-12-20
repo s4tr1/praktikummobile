@@ -41,48 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAfgFe832f_8RCAfdIJe5UaYj_ODVc-yPU',
-    appId: '1:363574853968:web:78653c404ba6e4d1feac55',
-    messagingSenderId: '363574853968',
-    projectId: 'mobileconatus',
-    authDomain: 'mobileconatus.firebaseapp.com',
-    storageBucket: 'mobileconatus.firebasestorage.app',
-    measurementId: 'G-XKS1VVHKJJ',
+    apiKey: 'AIzaSyAGx66p7sxQPcSnaPRjkt_w6z3Lcu1u4n4',
+    appId: '1:455233680424:web:ae27edfa4fe3b961aa711d',
+    messagingSenderId: '455233680424',
+    projectId: 'uapmobile-67cfc',
+    authDomain: 'uapmobile-67cfc.firebaseapp.com',
+    storageBucket: 'uapmobile-67cfc.firebasestorage.app',
+    measurementId: 'G-XN5QWM91LY',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDVzopJW-QEU3MxXBJ4OguCnHUG-yvZ-_Y',
-    appId: '1:363574853968:android:2db6ac492e650a43feac55',
-    messagingSenderId: '363574853968',
-    projectId: 'mobileconatus',
-    storageBucket: 'mobileconatus.firebasestorage.app',
+    apiKey: 'AIzaSyDNso7RP0h8jR-E3v5s6PzW3RSTGbMfcmM',
+    appId: '1:455233680424:android:71f1d1f66a9d46b0aa711d',
+    messagingSenderId: '455233680424',
+    projectId: 'uapmobile-67cfc',
+    storageBucket: 'uapmobile-67cfc.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA0EHAsbz4fZVpPqt6tgcVMQX6lsB4fOIQ',
-    appId: '1:363574853968:ios:fed53abfadb3efb6feac55',
-    messagingSenderId: '363574853968',
-    projectId: 'mobileconatus',
-    storageBucket: 'mobileconatus.firebasestorage.app',
+    apiKey: 'AIzaSyD5UsJmP3j6TCMHm5_mMzrFSeE-zYlOueM',
+    appId: '1:455233680424:ios:18348b21ca910a16aa711d',
+    messagingSenderId: '455233680424',
+    projectId: 'uapmobile-67cfc',
+    storageBucket: 'uapmobile-67cfc.firebasestorage.app',
     iosBundleId: 'com.example.demo',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA0EHAsbz4fZVpPqt6tgcVMQX6lsB4fOIQ',
-    appId: '1:363574853968:ios:fed53abfadb3efb6feac55',
-    messagingSenderId: '363574853968',
-    projectId: 'mobileconatus',
-    storageBucket: 'mobileconatus.firebasestorage.app',
+    apiKey: 'AIzaSyD5UsJmP3j6TCMHm5_mMzrFSeE-zYlOueM',
+    appId: '1:455233680424:ios:18348b21ca910a16aa711d',
+    messagingSenderId: '455233680424',
+    projectId: 'uapmobile-67cfc',
+    storageBucket: 'uapmobile-67cfc.firebasestorage.app',
     iosBundleId: 'com.example.demo',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAfgFe832f_8RCAfdIJe5UaYj_ODVc-yPU',
-    appId: '1:363574853968:web:9b1fc16b0b64b139feac55',
-    messagingSenderId: '363574853968',
-    projectId: 'mobileconatus',
-    authDomain: 'mobileconatus.firebaseapp.com',
-    storageBucket: 'mobileconatus.firebasestorage.app',
-    measurementId: 'G-YCQB3TKPQY',
+    apiKey: 'AIzaSyAGx66p7sxQPcSnaPRjkt_w6z3Lcu1u4n4',
+    appId: '1:455233680424:web:10dd7694c82df71caa711d',
+    messagingSenderId: '455233680424',
+    projectId: 'uapmobile-67cfc',
+    authDomain: 'uapmobile-67cfc.firebaseapp.com',
+    storageBucket: 'uapmobile-67cfc.firebasestorage.app',
+    measurementId: 'G-YSCDC5NH94',
   );
+
 }

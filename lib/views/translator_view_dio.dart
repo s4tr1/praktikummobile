@@ -13,30 +13,13 @@ class TranslatorViewDio extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text(
-              'Translator ',
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Chip(
-              label: Text(
-                'DIO',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              backgroundColor: Colors.green,
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            ),
-          ],
+        title: const Text(
+          'Translator',
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -50,34 +33,6 @@ class TranslatorViewDio extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                // Info Badge
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.green[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.green[200]!),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.flash_on, color: Colors.green[700], size: 20),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Powered by DIO - Faster parallel translation!',
-                          style: TextStyle(
-                            color: Colors.green[700],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-
                 // Language Selection Row
                 Obx(() {
                   return Row(
@@ -103,12 +58,12 @@ class TranslatorViewDio extends StatelessWidget {
                               child: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.green[100],
+                                  color: Colors.indigo[100],
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.swap_horiz,
-                                  color: Colors.green[700],
+                                  color: Colors.indigo[700],
                                   size: 24,
                                 ),
                               ),
@@ -200,7 +155,7 @@ class TranslatorViewDio extends StatelessWidget {
                           : (ctrl.isTranslating.value ? null : ctrl.translate),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.indigo,
                         disabledBackgroundColor: Colors.grey[300],
                       ),
                       child: ctrl.isTranslating.value
@@ -213,21 +168,13 @@ class TranslatorViewDio extends StatelessWidget {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.flash_on,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Translate with DIO',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
+                          : const Text(
+                              'Translate',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                     );
                   }),
@@ -270,9 +217,9 @@ class TranslatorViewDio extends StatelessWidget {
                   if (ctrl.translatedText.value.isNotEmpty) {
                     return Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.green[300]!),
+                        border: Border.all(color: Colors.indigo[300]!),
                         borderRadius: BorderRadius.circular(12),
-                        color: Colors.green[50],
+                        color: Colors.indigo[50],
                       ),
                       child: Column(
                         children: [
@@ -283,7 +230,7 @@ class TranslatorViewDio extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.green[100],
+                              color: Colors.indigo[100],
                               borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(12),
                               ),
@@ -291,12 +238,12 @@ class TranslatorViewDio extends StatelessWidget {
                             child: Row(
                               children: [
                                 Icon(Icons.check_circle,
-                                    color: Colors.green[700], size: 18),
+                                    color: Colors.indigo[700], size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Translation Result',
                                   style: TextStyle(
-                                    color: Colors.green[700],
+                                    color: Colors.indigo[700],
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                   ),
@@ -335,21 +282,21 @@ class TranslatorViewDio extends StatelessWidget {
                                       vertical: 8,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.green[200],
+                                      color: Colors.indigo[200],
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Row(
                                       children: [
                                         Icon(
                                           Icons.copy,
-                                          color: Colors.green[700],
+                                          color: Colors.indigo[700],
                                           size: 18,
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
                                           'Copy',
                                           style: TextStyle(
-                                            color: Colors.green[700],
+                                            color: Colors.indigo[700],
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),

@@ -12,41 +12,20 @@ class QuizViewDio extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Obx(() {
-              if (ctrl.quizzes.isEmpty) return const SizedBox.shrink();
-              return Chip(
-                label: Text(
-                  ctrl.currentLanguage.value == 'en'
-                      ? '🇬🇧 English'
-                      : '🇮🇩 Indonesian',
-                  style: const TextStyle(fontSize: 12),
-                ),
-                backgroundColor: ctrl.currentLanguage.value == 'en'
-                    ? Colors.blue[100]
-                    : Colors.red[100],
-              );
-            }),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Text(
-                'DIO',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+        title: Obx(() {
+          if (ctrl.quizzes.isEmpty) return const SizedBox.shrink();
+          return Chip(
+            label: Text(
+              ctrl.currentLanguage.value == 'en'
+                  ? '🇬🇧 English'
+                  : '🇮🇩 Indonesian',
+              style: const TextStyle(fontSize: 12),
             ),
-          ],
-        ),
+            backgroundColor: ctrl.currentLanguage.value == 'en'
+                ? Colors.blue[100]
+                : Colors.red[100],
+          );
+        }),
         actions: [
           Obx(() {
             if (ctrl.quizzes.isEmpty) return const SizedBox.shrink();
@@ -61,7 +40,7 @@ class QuizViewDio extends StatelessWidget {
                       height: 24,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.green,
+                        color: Colors.indigo,
                       ),
                     );
                   }
@@ -72,9 +51,9 @@ class QuizViewDio extends StatelessWidget {
                       icon: Icon(
                         ctrl.showTranslated.value
                             ? Icons.language
-                            : Icons.flash_on,
+                            : Icons.translate,
                         color: ctrl.showTranslated.value
-                            ? Colors.green
+                            ? Colors.indigo
                             : Colors.grey[700],
                       ),
                       onPressed: () {
@@ -96,18 +75,8 @@ class QuizViewDio extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (ctrl.loading.value) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(color: Colors.green),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Loading with DIO...',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                ],
-              ),
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.indigo),
             );
           }
           if (ctrl.quizzes.isEmpty) {
@@ -121,34 +90,6 @@ class QuizViewDio extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
             child: Column(
               children: [
-                // Info Banner DIO
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.green[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.green[200]!),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.flash_on, color: Colors.green[700], size: 18),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Powered by DIO - Parallel translation enabled!',
-                          style: TextStyle(
-                            color: Colors.green[700],
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-
                 // Question counter
                 Text(
                   '${ctrl.currentIndex.value + 1}/${ctrl.quizzes.length}',
@@ -159,8 +100,9 @@ class QuizViewDio extends StatelessWidget {
                 LinearProgressIndicator(
                   value: (ctrl.currentIndex.value + 1) / ctrl.quizzes.length,
                   minHeight: 6,
-                  backgroundColor: Colors.green[100],
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green[600]!),
+                  backgroundColor: Colors.indigo[100],
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.indigo[600]!),
                 ),
                 const SizedBox(height: 20),
 
@@ -170,10 +112,10 @@ class QuizViewDio extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.green[200]!, width: 2),
+                    border: Border.all(color: Colors.indigo[100]!, width: 2),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.1),
+                        color: Colors.indigo.withOpacity(0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       )
@@ -191,12 +133,12 @@ class QuizViewDio extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const CircularProgressIndicator(
-                                  color: Colors.green,
+                                  color: Colors.indigo,
                                   strokeWidth: 2,
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  'Translating with DIO...',
+                                  'Translating...',
                                   style: TextStyle(color: Colors.grey[600]),
                                 ),
                               ],
@@ -219,12 +161,12 @@ class QuizViewDio extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: Colors.green[100],
+                                  color: Colors.indigo[100],
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.check,
-                                  color: Colors.green[700],
+                                  color: Colors.indigo[700],
                                   size: 16,
                                 ),
                               ),
@@ -242,12 +184,12 @@ class QuizViewDio extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const CircularProgressIndicator(
-                                  color: Colors.green,
+                                  color: Colors.indigo,
                                   strokeWidth: 2,
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  'Translating options in parallel...',
+                                  'Translating options...',
                                   style: TextStyle(
                                     color: Colors.grey[600],
                                     fontSize: 12,
@@ -273,12 +215,12 @@ class QuizViewDio extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: selected
-                                      ? Colors.green
+                                      ? Colors.indigo
                                       : Colors.grey[100],
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: selected
-                                        ? Colors.green
+                                        ? Colors.indigo
                                         : Colors.transparent,
                                     width: 2,
                                   ),
@@ -314,46 +256,13 @@ class QuizViewDio extends StatelessWidget {
                 ),
                 const Spacer(),
 
-                // Translation Speed Info (if translated)
-                Obx(() {
-                  if (ctrl.showTranslated.value) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.green[50],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.speed, color: Colors.green[700], size: 16),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Parallel translation completed',
-                            style: TextStyle(
-                              color: Colors.green[700],
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                }),
-
                 // Next button
                 ElevatedButton(
                   onPressed:
                       ctrl.selectedIndex.value >= 0 ? ctrl.nextQuestion : null,
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.indigo,
                     disabledBackgroundColor: Colors.grey,
                   ),
                   child: const Text(

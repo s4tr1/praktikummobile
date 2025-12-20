@@ -195,7 +195,7 @@ class QuizControllerDio extends GetxController {
     if (currentIndex.value < quizzes.length - 1) {
       currentIndex.value++;
     } else {
-      // ✅ Quiz finished - show notification
+      // Quiz finished - show notification
       _showQuizCompletionDialog();
     }
   }
@@ -205,7 +205,7 @@ class QuizControllerDio extends GetxController {
     final courseCtrl = Get.find<CourseController>();
     courseCtrl.updateProgress(1, percent);
 
-    // ✅ Send quiz completion notification
+    // Send quiz completion notification
     await _notificationService.showQuizCompletionNotification(
       score: correctCount.value,
       total: quizzes.length,
@@ -221,13 +221,13 @@ class QuizControllerDio extends GetxController {
               percent >= 80
                   ? Icons.emoji_events
                   : percent >= 60
-                  ? Icons.thumb_up
-                  : Icons.emoji_emotions,
+                      ? Icons.thumb_up
+                      : Icons.emoji_emotions,
               color: percent >= 80
                   ? Colors.amber
                   : percent >= 60
-                  ? Colors.blue
-                  : Colors.orange,
+                      ? Colors.blue
+                      : Colors.orange,
               size: 32,
             ),
             const SizedBox(width: 12),
@@ -242,36 +242,13 @@ class QuizControllerDio extends GetxController {
               style: const TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
-                color: Colors.green,
+                color: Colors.indigo,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Skor Anda: $percent%',
               style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.green[50],
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.flash_on, color: Colors.green[700], size: 16),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Powered by DIO',
-                    style: TextStyle(
-                      color: Colors.green[700],
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
             ),
             const SizedBox(height: 16),
             LinearProgressIndicator(
@@ -282,8 +259,8 @@ class QuizControllerDio extends GetxController {
                 percent >= 80
                     ? Colors.green
                     : percent >= 60
-                    ? Colors.blue
-                    : Colors.orange,
+                        ? Colors.blue
+                        : Colors.orange,
               ),
             ),
             const SizedBox(height: 16),
@@ -291,8 +268,8 @@ class QuizControllerDio extends GetxController {
               percent >= 80
                   ? '🎉 Luar biasa! Kerja yang sangat baik!'
                   : percent >= 60
-                  ? '👏 Bagus! Terus tingkatkan!'
-                  : '💪 Jangan menyerah! Coba lagi!',
+                      ? '👍 Bagus! Terus tingkatkan!'
+                      : '💪 Jangan menyerah! Coba lagi!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.grey[700],

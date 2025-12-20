@@ -1,0 +1,754 @@
+{
+  "words": [
+    {
+      "id": "1",
+      "word": "Hello",
+      "part_of_speech": "interjection",
+      "pronunciation": "/həˈloʊ/",
+      "definition": "Used as a greeting or to begin a phone conversation",
+      "indonesian_meaning": "Halo",
+      "examples": [
+        "Hello, how are you today?",
+        "She said hello to everyone in the room"
+      ],
+      "synonyms": ["Hi", "Hey", "Greetings"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "2",
+      "word": "Thank",
+      "part_of_speech": "verb",
+      "pronunciation": "/θæŋk/",
+      "definition": "To express gratitude to someone",
+      "indonesian_meaning": "Berterima kasih",
+      "examples": [
+        "I want to thank you for your help",
+        "She thanked him for the wonderful gift"
+      ],
+      "synonyms": ["Appreciate", "Acknowledge"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "3",
+      "word": "Water",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈwɔːtər/",
+      "definition": "A clear liquid that has no taste or smell and is necessary for life",
+      "indonesian_meaning": "Air",
+      "examples": [
+        "Can I have a glass of water?",
+        "The water in the lake is very cold"
+      ],
+      "synonyms": ["H2O", "Aqua"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "4",
+      "word": "Food",
+      "part_of_speech": "noun",
+      "pronunciation": "/fuːd/",
+      "definition": "Something that people and animals eat",
+      "indonesian_meaning": "Makanan",
+      "examples": [
+        "This restaurant serves delicious food",
+        "We need to buy food for dinner"
+      ],
+      "synonyms": ["Meal", "Cuisine", "Dish"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "5",
+      "word": "Book",
+      "part_of_speech": "noun",
+      "pronunciation": "/bʊk/",
+      "definition": "A written or printed work consisting of pages",
+      "indonesian_meaning": "Buku",
+      "examples": [
+        "I'm reading a very interesting book",
+        "She bought three books at the bookstore"
+      ],
+      "synonyms": ["Novel", "Publication", "Volume"],
+      "level": "beginner",
+      "category": "academic"
+    },
+    {
+      "id": "6",
+      "word": "School",
+      "part_of_speech": "noun",
+      "pronunciation": "/skuːl/",
+      "definition": "An institution for educating children",
+      "indonesian_meaning": "Sekolah",
+      "examples": [
+        "The children go to school every morning",
+        "My school has a great library"
+      ],
+      "synonyms": ["Academy", "Institute", "College"],
+      "level": "beginner",
+      "category": "academic"
+    },
+    {
+      "id": "7",
+      "word": "Friend",
+      "part_of_speech": "noun",
+      "pronunciation": "/frend/",
+      "definition": "A person you know well and like",
+      "indonesian_meaning": "Teman",
+      "examples": [
+        "She is my best friend",
+        "I met my friends at the park"
+      ],
+      "synonyms": ["Companion", "Buddy", "Pal"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "8",
+      "word": "Happy",
+      "part_of_speech": "adjective",
+      "pronunciation": "/ˈhæpi/",
+      "definition": "Feeling or showing pleasure or contentment",
+      "indonesian_meaning": "Bahagia",
+      "examples": [
+        "I'm very happy to see you",
+        "They look happy together"
+      ],
+      "synonyms": ["Joyful", "Cheerful", "Delighted"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "9",
+      "word": "Beautiful",
+      "part_of_speech": "adjective",
+      "pronunciation": "/ˈbjuːtɪfl/",
+      "definition": "Pleasing to the senses or mind aesthetically",
+      "indonesian_meaning": "Indah",
+      "examples": [
+        "What a beautiful sunset!",
+        "She wore a beautiful dress"
+      ],
+      "synonyms": ["Gorgeous", "Lovely", "Attractive"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "10",
+      "word": "Important",
+      "part_of_speech": "adjective",
+      "pronunciation": "/ɪmˈpɔːrtnt/",
+      "definition": "Of great significance or value",
+      "indonesian_meaning": "Penting",
+      "examples": [
+        "This is a very important meeting",
+        "Education is important for everyone"
+      ],
+      "synonyms": ["Significant", "Crucial", "Essential"],
+      "level": "intermediate",
+      "category": "academic"
+    },
+    {
+      "id": "11",
+      "word": "Knowledge",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈnɑːlɪdʒ/",
+      "definition": "Information and skills acquired through experience or education",
+      "indonesian_meaning": "Pengetahuan",
+      "examples": [
+        "She has great knowledge of history",
+        "Knowledge is power"
+      ],
+      "synonyms": ["Information", "Understanding", "Wisdom"],
+      "level": "intermediate",
+      "category": "academic"
+    },
+    {
+      "id": "12",
+      "word": "Achieve",
+      "part_of_speech": "verb",
+      "pronunciation": "/əˈtʃiːv/",
+      "definition": "To successfully reach a goal through effort",
+      "indonesian_meaning": "Mencapai",
+      "examples": [
+        "She achieved her dream of becoming a doctor",
+        "We must work hard to achieve our goals"
+      ],
+      "synonyms": ["Accomplish", "Attain", "Reach"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "13",
+      "word": "Challenge",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈtʃælɪndʒ/",
+      "definition": "A difficult task or situation that tests someone's abilities",
+      "indonesian_meaning": "Tantangan",
+      "examples": [
+        "Learning a new language is a big challenge",
+        "She loves facing new challenges"
+      ],
+      "synonyms": ["Obstacle", "Difficulty", "Test"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "14",
+      "word": "Experience",
+      "part_of_speech": "noun",
+      "pronunciation": "/ɪkˈspɪriəns/",
+      "definition": "Knowledge or skill acquired by doing something",
+      "indonesian_meaning": "Pengalaman",
+      "examples": [
+        "He has five years of work experience",
+        "That was an amazing experience"
+      ],
+      "synonyms": ["Background", "Exposure", "Practice"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "15",
+      "word": "Develop",
+      "part_of_speech": "verb",
+      "pronunciation": "/dɪˈveləp/",
+      "definition": "To grow or cause to grow gradually",
+      "indonesian_meaning": "Mengembangkan",
+      "examples": [
+        "We need to develop new skills",
+        "The company is developing a new product"
+      ],
+      "synonyms": ["Grow", "Evolve", "Progress"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "16",
+      "word": "Success",
+      "part_of_speech": "noun",
+      "pronunciation": "/səkˈses/",
+      "definition": "The accomplishment of an aim or purpose",
+      "indonesian_meaning": "Kesuksesan",
+      "examples": [
+        "Hard work is the key to success",
+        "The project was a great success"
+      ],
+      "synonyms": ["Achievement", "Victory", "Triumph"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "17",
+      "word": "Opportunity",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˌɑːpərˈtuːnəti/",
+      "definition": "A favorable time or chance for action",
+      "indonesian_meaning": "Kesempatan",
+      "examples": [
+        "This is a great opportunity for you",
+        "Don't miss this opportunity"
+      ],
+      "synonyms": ["Chance", "Opening", "Possibility"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "18",
+      "word": "Creative",
+      "part_of_speech": "adjective",
+      "pronunciation": "/kriˈeɪtɪv/",
+      "definition": "Having the ability to create or produce new ideas",
+      "indonesian_meaning": "Kreatif",
+      "examples": [
+        "She is very creative and artistic",
+        "We need creative solutions to this problem"
+      ],
+      "synonyms": ["Innovative", "Imaginative", "Original"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "19",
+      "word": "Efficient",
+      "part_of_speech": "adjective",
+      "pronunciation": "/ɪˈfɪʃnt/",
+      "definition": "Working in a well-organized and competent way",
+      "indonesian_meaning": "Efisien",
+      "examples": [
+        "This is a very efficient method",
+        "We need more efficient processes"
+      ],
+      "synonyms": ["Effective", "Productive", "Economical"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "20",
+      "word": "Analyze",
+      "part_of_speech": "verb",
+      "pronunciation": "/ˈænəlaɪz/",
+      "definition": "To examine something in detail",
+      "indonesian_meaning": "Menganalisis",
+      "examples": [
+        "We need to analyze the data carefully",
+        "The doctor analyzed the test results"
+      ],
+      "synonyms": ["Examine", "Study", "Investigate"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "21",
+      "word": "Comprehensive",
+      "part_of_speech": "adjective",
+      "pronunciation": "/ˌkɑːmprɪˈhensɪv/",
+      "definition": "Complete and including everything necessary",
+      "indonesian_meaning": "Komprehensif",
+      "examples": [
+        "This is a comprehensive guide to English grammar",
+        "We conducted a comprehensive study"
+      ],
+      "synonyms": ["Complete", "Thorough", "Extensive"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "22",
+      "word": "Demonstrate",
+      "part_of_speech": "verb",
+      "pronunciation": "/ˈdemənstreɪt/",
+      "definition": "To show clearly by giving proof or evidence",
+      "indonesian_meaning": "Mendemonstrasikan",
+      "examples": [
+        "The teacher demonstrated how to solve the problem",
+        "This experiment demonstrates the theory"
+      ],
+      "synonyms": ["Show", "Prove", "Display"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "23",
+      "word": "Significant",
+      "part_of_speech": "adjective",
+      "pronunciation": "/sɪɡˈnɪfɪkənt/",
+      "definition": "Important or noticeable",
+      "indonesian_meaning": "Signifikan",
+      "examples": [
+        "There has been a significant improvement",
+        "This is a significant discovery"
+      ],
+      "synonyms": ["Important", "Notable", "Meaningful"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "24",
+      "word": "Establish",
+      "part_of_speech": "verb",
+      "pronunciation": "/ɪˈstæblɪʃ/",
+      "definition": "To set up or create something",
+      "indonesian_meaning": "Mendirikan",
+      "examples": [
+        "They established a new company",
+        "We need to establish clear rules"
+      ],
+      "synonyms": ["Create", "Found", "Institute"],
+      "level": "advanced",
+      "category": "business"
+    },
+    {
+      "id": "25",
+      "word": "Implement",
+      "part_of_speech": "verb",
+      "pronunciation": "/ˈɪmplɪment/",
+      "definition": "To put a plan or system into operation",
+      "indonesian_meaning": "Menerapkan",
+      "examples": [
+        "We will implement the new policy next month",
+        "The company implemented major changes"
+      ],
+      "synonyms": ["Execute", "Apply", "Enforce"],
+      "level": "advanced",
+      "category": "business"
+    },
+    {
+      "id": "26",
+      "word": "Strategy",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈstrætədʒi/",
+      "definition": "A plan of action designed to achieve a goal",
+      "indonesian_meaning": "Strategi",
+      "examples": [
+        "We need a new marketing strategy",
+        "Their strategy was very effective"
+      ],
+      "synonyms": ["Plan", "Approach", "Tactic"],
+      "level": "advanced",
+      "category": "business"
+    },
+    {
+      "id": "27",
+      "word": "Morning",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈmɔːrnɪŋ/",
+      "definition": "The early part of the day from sunrise to noon",
+      "indonesian_meaning": "Pagi",
+      "examples": [
+        "Good morning! How did you sleep?",
+        "I wake up at 6 in the morning"
+      ],
+      "synonyms": ["Dawn", "Daybreak", "Sunrise"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "28",
+      "word": "Evening",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈiːvnɪŋ/",
+      "definition": "The latter part of the day",
+      "indonesian_meaning": "Sore/Malam",
+      "examples": [
+        "Good evening! Welcome to our home",
+        "We usually have dinner in the evening"
+      ],
+      "synonyms": ["Dusk", "Twilight", "Nightfall"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "29",
+      "word": "Family",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈfæməli/",
+      "definition": "A group of people related by blood or marriage",
+      "indonesian_meaning": "Keluarga",
+      "examples": [
+        "I love spending time with my family",
+        "Family is very important to me"
+      ],
+      "synonyms": ["Relatives", "Kin", "Household"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "30",
+      "word": "Learn",
+      "part_of_speech": "verb",
+      "pronunciation": "/lɜːrn/",
+      "definition": "To gain knowledge or skill by study or experience",
+      "indonesian_meaning": "Belajar",
+      "examples": [
+        "I want to learn English",
+        "Children learn quickly"
+      ],
+      "synonyms": ["Study", "Master", "Acquire"],
+      "level": "beginner",
+      "category": "academic"
+    },
+    {
+      "id": "31",
+      "word": "Understand",
+      "part_of_speech": "verb",
+      "pronunciation": "/ˌʌndərˈstænd/",
+      "definition": "To know the meaning of something",
+      "indonesian_meaning": "Mengerti",
+      "examples": [
+        "Do you understand the question?",
+        "I don't understand this word"
+      ],
+      "synonyms": ["Comprehend", "Grasp", "Know"],
+      "level": "beginner",
+      "category": "academic"
+    },
+    {
+      "id": "32",
+      "word": "Work",
+      "part_of_speech": "verb/noun",
+      "pronunciation": "/wɜːrk/",
+      "definition": "Activity involving mental or physical effort",
+      "indonesian_meaning": "Bekerja/Pekerjaan",
+      "examples": [
+        "I work at a hospital",
+        "She has a lot of work to do"
+      ],
+      "synonyms": ["Job", "Labor", "Employment"],
+      "level": "beginner",
+      "category": "business"
+    },
+    {
+      "id": "33",
+      "word": "Money",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈmʌni/",
+      "definition": "Currency used as a medium of exchange",
+      "indonesian_meaning": "Uang",
+      "examples": [
+        "I need to save money",
+        "How much money do you have?"
+      ],
+      "synonyms": ["Cash", "Currency", "Funds"],
+      "level": "beginner",
+      "category": "business"
+    },
+    {
+      "id": "34",
+      "word": "Buy",
+      "part_of_speech": "verb",
+      "pronunciation": "/baɪ/",
+      "definition": "To obtain something by paying money",
+      "indonesian_meaning": "Membeli",
+      "examples": [
+        "I want to buy a new phone",
+        "She bought flowers at the market"
+      ],
+      "synonyms": ["Purchase", "Acquire", "Obtain"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "35",
+      "word": "Help",
+      "part_of_speech": "verb/noun",
+      "pronunciation": "/help/",
+      "definition": "To assist or aid someone",
+      "indonesian_meaning": "Membantu/Bantuan",
+      "examples": [
+        "Can you help me with this?",
+        "Thank you for your help"
+      ],
+      "synonyms": ["Assist", "Aid", "Support"],
+      "level": "beginner",
+      "category": "daily"
+    },
+    {
+      "id": "36",
+      "word": "Problem",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈprɑːbləm/",
+      "definition": "A matter or situation regarded as unwelcome",
+      "indonesian_meaning": "Masalah",
+      "examples": [
+        "We have a big problem to solve",
+        "What's the problem?"
+      ],
+      "synonyms": ["Issue", "Difficulty", "Challenge"],
+      "level": "intermediate",
+      "category": "daily"
+    },
+    {
+      "id": "37",
+      "word": "Solution",
+      "part_of_speech": "noun",
+      "pronunciation": "/səˈluːʃn/",
+      "definition": "A means of solving a problem",
+      "indonesian_meaning": "Solusi",
+      "examples": [
+        "We found a solution to the problem",
+        "What's your solution?"
+      ],
+      "synonyms": ["Answer", "Resolution", "Fix"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "38",
+      "word": "Decision",
+      "part_of_speech": "noun",
+      "pronunciation": "/dɪˈsɪʒn/",
+      "definition": "A conclusion reached after consideration",
+      "indonesian_meaning": "Keputusan",
+      "examples": [
+        "I need to make an important decision",
+        "That was a good decision"
+      ],
+      "synonyms": ["Choice", "Judgment", "Determination"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "39",
+      "word": "Communication",
+      "part_of_speech": "noun",
+      "pronunciation": "/kəˌmjuːnɪˈkeɪʃn/",
+      "definition": "The exchange of information or ideas",
+      "indonesian_meaning": "Komunikasi",
+      "examples": [
+        "Good communication is important",
+        "We have excellent communication"
+      ],
+      "synonyms": ["Interaction", "Contact", "Dialogue"],
+      "level": "intermediate",
+      "category": "business"
+    },
+    {
+      "id": "40",
+      "word": "Environment",
+      "part_of_speech": "noun",
+      "pronunciation": "/ɪnˈvaɪrənmənt/",
+      "definition": "The surroundings or conditions in which something exists",
+      "indonesian_meaning": "Lingkungan",
+      "examples": [
+        "We must protect the environment",
+        "This is a friendly work environment"
+      ],
+      "synonyms": ["Surroundings", "Setting", "Atmosphere"],
+      "level": "intermediate",
+      "category": "academic"
+    },
+    {
+      "id": "41",
+      "word": "Technology",
+      "part_of_speech": "noun",
+      "pronunciation": "/tekˈnɑːlədʒi/",
+      "definition": "The application of scientific knowledge",
+      "indonesian_meaning": "Teknologi",
+      "examples": [
+        "Technology is changing our lives",
+        "New technology is amazing"
+      ],
+      "synonyms": ["Innovation", "Engineering", "Science"],
+      "level": "intermediate",
+      "category": "academic"
+    },
+    {
+      "id": "42",
+      "word": "Research",
+      "part_of_speech": "noun/verb",
+      "pronunciation": "/rɪˈsɜːrtʃ/",
+      "definition": "Systematic investigation to establish facts",
+      "indonesian_meaning": "Penelitian",
+      "examples": [
+        "She is doing research on cancer",
+        "We need more research on this topic"
+      ],
+      "synonyms": ["Study", "Investigation", "Analysis"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "43",
+      "word": "Theory",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˈθɪri/",
+      "definition": "A system of ideas to explain something",
+      "indonesian_meaning": "Teori",
+      "examples": [
+        "Einstein's theory of relativity",
+        "That's just a theory, not a fact"
+      ],
+      "synonyms": ["Hypothesis", "Concept", "Model"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "44",
+      "word": "Innovation",
+      "part_of_speech": "noun",
+      "pronunciation": "/ˌɪnəˈveɪʃn/",
+      "definition": "A new method, idea, or product",
+      "indonesian_meaning": "Inovasi",
+      "examples": [
+        "This company is known for innovation",
+        "We need constant innovation"
+      ],
+      "synonyms": ["Invention", "Advancement", "Development"],
+      "level": "advanced",
+      "category": "business"
+    },
+    {
+      "id": "45",
+      "word": "Perspective",
+      "part_of_speech": "noun",
+      "pronunciation": "/pərˈspektɪv/",
+      "definition": "A particular attitude or way of viewing something",
+      "indonesian_meaning": "Perspektif",
+      "examples": [
+        "From my perspective, this is correct",
+        "We need different perspectives"
+      ],
+      "synonyms": ["Viewpoint", "Outlook", "Angle"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "46",
+      "word": "Collaborate",
+      "part_of_speech": "verb",
+      "pronunciation": "/kəˈlæbəreɪt/",
+      "definition": "To work jointly with others",
+      "indonesian_meaning": "Berkolaborasi",
+      "examples": [
+        "We need to collaborate on this project",
+        "Scientists collaborate worldwide"
+      ],
+      "synonyms": ["Cooperate", "Partner", "Team up"],
+      "level": "advanced",
+      "category": "business"
+    },
+    {
+      "id": "47",
+      "word": "Evaluate",
+      "part_of_speech": "verb",
+      "pronunciation": "/ɪˈvæljueɪt/",
+      "definition": "To assess the value or quality of something",
+      "indonesian_meaning": "Mengevaluasi",
+      "examples": [
+        "We need to evaluate the results",
+        "The teacher will evaluate your work"
+      ],
+      "synonyms": ["Assess", "Judge", "Appraise"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "48",
+      "word": "Proficient",
+      "part_of_speech": "adjective",
+      "pronunciation": "/prəˈfɪʃnt/",
+      "definition": "Competent or skilled in doing something",
+      "indonesian_meaning": "Mahir",
+      "examples": [
+        "She is proficient in three languages",
+        "He became proficient in programming"
+      ],
+      "synonyms": ["Skilled", "Expert", "Competent"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "49",
+      "word": "Fundamental",
+      "part_of_speech": "adjective",
+      "pronunciation": "/ˌfʌndəˈmentl/",
+      "definition": "Forming a necessary base or core",
+      "indonesian_meaning": "Fundamental",
+      "examples": [
+        "This is a fundamental principle",
+        "Education is a fundamental right"
+      ],
+      "synonyms": ["Basic", "Essential", "Primary"],
+      "level": "advanced",
+      "category": "academic"
+    },
+    {
+      "id": "50",
+      "word": "Appreciate",
+      "part_of_speech": "verb",
+      "pronunciation": "/əˈpriːʃieɪt/",
+      "definition": "To recognize the value of something",
+      "indonesian_meaning": "Menghargai",
+      "examples": [
+        "I really appreciate your help",
+        "She appreciates good music"
+      ],
+      "synonyms": ["Value", "Recognize", "Acknowledge"],
+      "level": "intermediate",
+      "category": "daily"
+    }
+  ]
+}

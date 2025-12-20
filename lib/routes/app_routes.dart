@@ -19,8 +19,11 @@ import '../views/user_progress_view.dart';
 // Location view
 import '../views/branch_location_view.dart';
 
-// ✅ Notification view
+// Notification view
 import '../views/notification_settings_view.dart';
+
+// ✅ Vocabulary views
+import '../views/vocabulary_view.dart';
 
 class AppRoutes {
   // User routes
@@ -34,9 +37,12 @@ class AppRoutes {
   static const translator = '/translator';
   static const translatorDio = '/translator-dio';
   static const branchLocation = '/branch-location';
-
-  // ✅ Notification route
   static const notificationSettings = '/notification-settings';
+
+  // ✅ Vocabulary routes
+  static const vocabulary = '/vocabulary';
+  static const vocabularyDetail = '/vocabulary/detail';
+  static const vocabularyQuiz = '/vocabulary/quiz';
 
   // Admin routes
   static const adminLogin = '/admin/login';
@@ -57,19 +63,24 @@ class AppPages {
     GetPage(name: AppRoutes.quiz, page: () => const QuizView()),
     GetPage(name: AppRoutes.quizDio, page: () => const QuizViewDio()),
     GetPage(name: AppRoutes.translator, page: () => const TranslatorView()),
-    GetPage(name: AppRoutes.translatorDio, page: () => const TranslatorViewDio()),
-    GetPage(name: AppRoutes.branchLocation, page: () => const BranchLocationView()),
-
-    // ✅ Notification page
+    GetPage(
+        name: AppRoutes.translatorDio, page: () => const TranslatorViewDio()),
+    GetPage(
+        name: AppRoutes.branchLocation, page: () => const BranchLocationView()),
     GetPage(
       name: AppRoutes.notificationSettings,
       page: () => const NotificationSettingsView(),
     ),
 
+    // ✅ Vocabulary pages
+    GetPage(name: AppRoutes.vocabulary, page: () => const VocabularyView()),
+
     // Admin pages
     GetPage(name: AppRoutes.adminLogin, page: () => const AdminLoginView()),
-    GetPage(name: AppRoutes.adminDashboard, page: () => const AdminDashboardView()),
-    GetPage(name: AppRoutes.quizManagement, page: () => const QuizManagementView()),
+    GetPage(
+        name: AppRoutes.adminDashboard, page: () => const AdminDashboardView()),
+    GetPage(
+        name: AppRoutes.quizManagement, page: () => const QuizManagementView()),
     GetPage(name: AppRoutes.quizForm, page: () => const QuizFormView()),
     GetPage(name: AppRoutes.userProgress, page: () => const UserProgressView()),
   ];

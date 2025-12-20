@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/course_model.dart';
-import '../controllers/quiz_controller.dart';
-import '../controllers/quiz_controller_dio.dart';
+import '../controllers/quiz_controller_dio.dart'; // ✅ HANYA DIO
 import '../routes/app_routes.dart';
 
 class CourseView extends StatelessWidget {
@@ -81,7 +80,7 @@ class CourseView extends StatelessWidget {
 
                             // Section title
                             const Text(
-                              'Choose Quiz Implementation',
+                              'Quiz',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -89,7 +88,7 @@ class CourseView extends StatelessWidget {
                             ),
                             const SizedBox(height: 12),
 
-                            // Quiz HTTP Card
+                            // ✅ HANYA 1 QUIZ CARD (MENGGUNAKAN DIO)
                             Card(
                               elevation: 2,
                               shape: RoundedRectangleBorder(
@@ -97,14 +96,16 @@ class CourseView extends StatelessWidget {
                               ),
                               child: InkWell(
                                 onTap: () async {
-                                  // Initialize HTTP controller
-                                  if (!Get.isRegistered<QuizController>()) {
-                                    Get.put(QuizController());
+                                  // Initialize DIO controller
+                                  if (!Get.isRegistered<QuizControllerDio>()) {
+                                    Get.put(QuizControllerDio());
                                   }
-                                  final quizCtrl = Get.find<QuizController>();
+                                  final quizCtrl =
+                                      Get.find<QuizControllerDio>();
                                   await quizCtrl.loadQuizzes(
                                       courseKey: 'basic_grammar');
-                                  Get.toNamed(AppRoutes.quiz);
+                                  Get.toNamed(
+                                      AppRoutes.quizDio); // ✅ LANGSUNG KE DIO
                                 },
                                 borderRadius: BorderRadius.circular(12),
                                 child: Padding(
@@ -130,174 +131,20 @@ class CourseView extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              children: [
-                                                const Text(
-                                                  'Start Quiz ',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 6,
-                                                    vertical: 2,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.indigo[100],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                  ),
-                                                  child: Text(
-                                                    'HTTP',
-                                                    style: TextStyle(
-                                                      color: Colors.indigo[700],
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            const Text(
+                                              'Start Quiz',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
-                                              'Standard implementation',
+                                              'Test your knowledge',
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.grey[600],
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.grey[400],
-                                        size: 16,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-
-                            // Quiz DIO Card
-                            Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: InkWell(
-                                onTap: () async {
-                                  // Initialize DIO controller
-                                  if (!Get.isRegistered<QuizControllerDio>()) {
-                                    Get.put(QuizControllerDio());
-                                  }
-                                  final quizCtrl =
-                                      Get.find<QuizControllerDio>();
-                                  await quizCtrl.loadQuizzes(
-                                      courseKey: 'basic_grammar');
-                                  Get.toNamed(AppRoutes.quizDio);
-                                },
-                                borderRadius: BorderRadius.circular(12),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green[100],
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        child: Icon(
-                                          Icons.flash_on,
-                                          color: Colors.green[700],
-                                          size: 28,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                const Text(
-                                                  'Start Quiz ',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 6,
-                                                    vertical: 2,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.green,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                  ),
-                                                  child: const Text(
-                                                    'DIO',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 6,
-                                                    vertical: 2,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.amber,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                  ),
-                                                  child: const Text(
-                                                    '⭐',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.speed,
-                                                  size: 14,
-                                                  color: Colors.green[700],
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  'Faster parallel translation',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                              ],
                                             ),
                                           ],
                                         ),

@@ -71,3 +71,4 @@ flutter:
     - assets/images/
     - assets/quizzes.json
     - assets/sounds/  # Untuk custom notification sounds
+    - assets/data/vocabulary_words.json  # ✅ ATAU INI

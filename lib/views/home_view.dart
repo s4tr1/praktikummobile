@@ -17,9 +17,9 @@ class HomeView extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Obx(() => Text(
-          'Hi, ${authCtrl.getCurrentUserName()}',
-          style: const TextStyle(color: Colors.white),
-        )),
+              'Hi, ${authCtrl.getCurrentUserName()}',
+              style: const TextStyle(color: Colors.white),
+            )),
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.more_vert, color: Colors.white),
@@ -34,7 +34,6 @@ class HomeView extends StatelessWidget {
                   ],
                 ),
               ),
-              // ✅ ADD NOTIFICATION SETTINGS
               const PopupMenuItem(
                 value: 'notifications',
                 child: Row(
@@ -139,7 +138,7 @@ class HomeView extends StatelessWidget {
                     const CircleAvatar(
                         radius: 28,
                         backgroundImage:
-                        AssetImage('assets/images/conatus.jpg'))
+                            AssetImage('assets/images/conatus.jpg'))
                   ],
                 ),
               ),
@@ -149,15 +148,20 @@ class HomeView extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(24)),
+                        BorderRadius.vertical(top: Radius.circular(24)),
                   ),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Continue Course',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600)),
+                        // ========== CONTINUE COURSE SECTION ==========
+                        const Text(
+                          'Continue Course',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const SizedBox(height: 12),
                         Obx(() {
                           final courses = courseCtrl.courses;
@@ -168,21 +172,34 @@ class HomeView extends StatelessWidget {
                           final c = courses.first;
                           return GestureDetector(
                             onTap: () {
-                              Get.toNamed(AppRoutes.course, arguments: c.toMap());
+                              Get.toNamed(AppRoutes.course,
+                                  arguments: c.toMap());
                             },
                             child: Card(
+                              elevation: 3,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
-                              child: SizedBox(
+                              child: Container(
                                 height: 120,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.indigo[400]!,
+                                      Colors.indigo[600]!
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
                                 child: Row(
                                   children: [
                                     Container(
                                       width: 120,
                                       decoration: BoxDecoration(
                                         borderRadius:
-                                        const BorderRadius.horizontal(
-                                            left: Radius.circular(12)),
+                                            const BorderRadius.horizontal(
+                                                left: Radius.circular(12)),
                                         image: const DecorationImage(
                                           image: AssetImage(
                                               'assets/images/conatus.jpg'),
@@ -192,22 +209,55 @@ class HomeView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
+                                        padding: const EdgeInsets.all(16.0),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Text(c.title,
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold)),
+                                            Text(
+                                              c.title,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              'Level: ${c.level}',
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white70,
+                                              ),
+                                            ),
                                             const Spacer(),
                                             ElevatedButton(
                                               onPressed: () {
                                                 Get.toNamed(AppRoutes.course,
                                                     arguments: c.toMap());
                                               },
-                                              child: const Text('Continue'),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.white,
+                                                foregroundColor:
+                                                    Colors.indigo[600],
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 20,
+                                                  vertical: 8,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'Continue',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
                                             )
                                           ],
                                         ),
@@ -219,183 +269,63 @@ class HomeView extends StatelessWidget {
                             ),
                           );
                         }),
-                        const SizedBox(height: 16),
-                        const Text('Tools',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 8),
 
-                        // Translator HTTP
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.indigo[100],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                Icons.translate,
-                                color: Colors.indigo[600],
-                                size: 24,
-                              ),
-                            ),
-                            title: Row(
-                              children: [
-                                const Text(
-                                  'Translator ',
-                                  style: TextStyle(fontWeight: FontWeight.w600),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.indigo[100],
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    'HTTP',
-                                    style: TextStyle(
-                                      color: Colors.indigo[700],
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: const Text('Standard HTTP implementation'),
-                            trailing: Icon(
-                              Icons.arrow_forward,
-                              color: Colors.grey[400],
-                            ),
-                            onTap: () => Get.toNamed(AppRoutes.translator),
+                        const SizedBox(height: 24),
+
+                        // ========== LEARNING TOOLS SECTION ==========
+                        const Text(
+                          'Learning Tools',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
 
-                        // Translator DIO
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.green[100],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                Icons.flash_on,
-                                color: Colors.green[700],
-                                size: 24,
-                              ),
-                            ),
-                            title: Row(
-                              children: [
-                                const Text(
-                                  'Translator ',
-                                  style: TextStyle(fontWeight: FontWeight.w600),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: const Text(
-                                    'DIO',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Row(
-                              children: [
-                                Icon(Icons.speed,
-                                    size: 14, color: Colors.green[700]),
-                                const SizedBox(width: 4),
-                                const Text('Advanced Dio implementation'),
-                              ],
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward,
-                              color: Colors.grey[400],
-                            ),
-                            onTap: () => Get.toNamed(AppRoutes.translatorDio),
+                        // Translator Tool
+                        _ToolCard(
+                          icon: Icons.translate,
+                          title: 'Translator',
+                          subtitle: 'Translate English ↔ Indonesian',
+                          gradient: LinearGradient(
+                            colors: [Colors.indigo[400]!, Colors.indigo[600]!],
                           ),
+                          onTap: () => Get.toNamed(AppRoutes.translatorDio),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Vocabulary Tool
+                        _ToolCard(
+                          icon: Icons.book,
+                          title: 'Vocabulary Builder',
+                          subtitle: 'Learn new words with flashcards',
+                          gradient: LinearGradient(
+                            colors: [Colors.purple[400]!, Colors.purple[600]!],
+                          ),
+                          onTap: () => Get.toNamed(AppRoutes.vocabulary),
                         ),
 
-                        const SizedBox(height: 16),
-                        const Text('Location Services',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 24),
+
+                        // ========== LOCATION SERVICES SECTION ==========
+                        const Text(
+                          'Location Services',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
 
                         // Branch Location
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.purple[100],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                Icons.map,
-                                color: Colors.purple[700],
-                                size: 24,
-                              ),
-                            ),
-                            title: const Text(
-                              'Branch Locations',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: const Text('Find nearest course branches'),
-                            trailing: Icon(
-                              Icons.arrow_forward,
-                              color: Colors.grey[400],
-                            ),
-                            onTap: () => Get.toNamed(AppRoutes.branchLocation),
+                        _ToolCard(
+                          icon: Icons.map,
+                          title: 'Branch Locations',
+                          subtitle: 'Find nearest course branches',
+                          gradient: LinearGradient(
+                            colors: [Colors.teal[400]!, Colors.teal[600]!],
                           ),
-                        ),
-
-                        const SizedBox(height: 16),
-                        const Text('Popular Courses',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 8),
-
-                        ListTile(
-                          leading: Image.asset('assets/images/conatus.jpg',
-                              width: 56),
-                          title: const Text('Speaking'),
-                          subtitle: const Text('Improve fluency'),
-                          trailing: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Enroll')),
-                        ),
-                        ListTile(
-                          leading: Image.asset('assets/images/conatus.jpg',
-                              width: 56),
-                          title: const Text('Vocabulary'),
-                          subtitle: const Text('Build vocab'),
-                          trailing: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Enroll')),
+                          onTap: () => Get.toNamed(AppRoutes.branchLocation),
                         ),
 
                         const SizedBox(height: 20),
@@ -405,6 +335,89 @@ class HomeView extends StatelessWidget {
                 ),
               )
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ========== REUSABLE TOOL CARD WIDGET ==========
+class _ToolCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Gradient gradient;
+  final VoidCallback onTap;
+
+  const _ToolCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.gradient,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white70,
+                  size: 20,
+                ),
+              ],
+            ),
           ),
         ),
       ),

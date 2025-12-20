@@ -4,6 +4,7 @@ import '../models/user_model.dart';
 import '../models/course_model.dart';
 import '../models/quiz_model.dart';
 import '../models/branch_model.dart';
+import '../models/vocabulary_model.dart'; // ✅ TAMBAHKAN INI!
 import '../config/supabase_config.dart';
 
 class HiveService {
@@ -29,15 +30,18 @@ class HiveService {
     if (!Hive.isAdapterRegistered(3)) {
       Hive.registerAdapter(BranchModelAdapter());
     }
+    // ✅ VOCABULARY ADAPTER
+    if (!Hive.isAdapterRegistered(4)) {
+      Hive.registerAdapter(VocabularyWordAdapter());
+    }
 
     // Open boxes
     await Hive.openBox<UserModel>(SupabaseConfig.userBoxName);
     await Hive.openBox<CourseModel>(SupabaseConfig.courseBoxName);
     await Hive.openBox<QuizModel>(SupabaseConfig.quizBoxName);
     await Hive.openBox(SupabaseConfig.settingsBoxName);
-
-    // Branch box
     await Hive.openBox<BranchModel>('branch_box');
+    await Hive.openBox<VocabularyWord>('vocabulary_box'); // ✅ VOCABULARY BOX
   }
 
   // ========== USER CACHE ==========
@@ -82,8 +86,7 @@ class HiveService {
 
   // ========== QUIZ CACHE ==========
 
-  Box<QuizModel> get quizBox =>
-      Hive.box<QuizModel>(SupabaseConfig.quizBoxName);
+  Box<QuizModel> get quizBox => Hive.box<QuizModel>(SupabaseConfig.quizBoxName);
 
   Future<void> saveQuizzes(List<QuizModel> quizzes) async {
     await quizBox.clear();
@@ -112,7 +115,7 @@ class HiveService {
     await quizBox.clear();
   }
 
-  // ========== BRANCH CACHE (BARU DITAMBAHKAN) ==========
+  // ========== BRANCH CACHE ==========
 
   Box<BranchModel> get branchBox => Hive.box<BranchModel>('branch_box');
 
@@ -137,6 +140,30 @@ class HiveService {
 
   Future<void> clearBranches() async {
     await branchBox.clear();
+  }
+
+  // ========== VOCABULARY CACHE (NEW) ==========
+
+  Box<VocabularyWord> get vocabularyBox =>
+      Hive.box<VocabularyWord>('vocabulary_box');
+
+  Future<void> saveVocabulary(List<VocabularyWord> words) async {
+    await vocabularyBox.clear();
+    for (var word in words) {
+      await vocabularyBox.put(word.id, word);
+    }
+  }
+
+  List<VocabularyWord> getCachedVocabulary() {
+    return vocabularyBox.values.toList();
+  }
+
+  Future<void> updateVocabularyWord(VocabularyWord word) async {
+    await vocabularyBox.put(word.id, word);
+  }
+
+  Future<void> clearVocabulary() async {
+    await vocabularyBox.clear();
   }
 
   // ========== SETTINGS ==========
@@ -175,6 +202,7 @@ class HiveService {
     await clearCourses();
     await clearQuizzes();
     await clearBranches();
+    await clearVocabulary(); // ✅ CLEAR VOCABULARY
     await settingsBox.clear();
   }
 

@@ -6,8 +6,9 @@ import 'routes/app_routes.dart';
 import 'controllers/course_controller.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/admin_controller.dart';
-import 'controllers/quiz_controller.dart';
 import 'controllers/quiz_controller_dio.dart';
+import 'controllers/translation_controller_dio.dart';
+import 'controllers/vocabulary_controller.dart'; // ✅ IMPORT
 import 'services/hive_service.dart';
 import 'services/notification_service.dart';
 import 'config/supabase_config.dart';
@@ -17,11 +18,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // ✅ 1. Initialize Firebase
+    // 1. Initialize Firebase
     await Firebase.initializeApp();
     print('🔥 Firebase initialized successfully');
 
-    // ✅ 2. Initialize Notification Service
+    // 2. Initialize Notification Service
     await NotificationService.instance.initialize();
     print('🔔 Notification service initialized successfully');
 
@@ -43,9 +44,12 @@ void main() async {
     // Register AdminController as lazy
     Get.lazyPut<AdminController>(() => AdminController(), fenix: true);
 
-    // Lazy load quiz controllers
-    Get.lazyPut<QuizController>(() => QuizController());
+    // Register Quiz & Translation Controllers
     Get.lazyPut<QuizControllerDio>(() => QuizControllerDio());
+    Get.lazyPut<TranslatorControllerDio>(() => TranslatorControllerDio());
+
+    // ✅ Register VocabularyController
+    Get.lazyPut<VocabularyController>(() => VocabularyController());
 
     runApp(const ConatusApp());
   } catch (e) {
